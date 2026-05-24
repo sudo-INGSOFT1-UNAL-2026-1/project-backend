@@ -1,4 +1,4 @@
-USE sistema_gestion;
+USE erp_db;
 
 -- =========================
 -- ROLES

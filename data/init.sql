@@ -1,9 +1,9 @@
 -- =========================
 -- RESET
 -- =========================
-DROP DATABASE IF EXISTS sistema_gestion;
-CREATE DATABASE sistema_gestion;
-USE sistema_gestion;
+DROP DATABASE IF EXISTS erp_db;
+CREATE DATABASE erp_db;
+USE erp_db;
 
 -- =========================
 -- ROL
