@@ -1,4 +1,12 @@
 package com.unerp.domain.usuario.estado;
 
-public class EstadoUsuario {
+public abstract class EstadoUsuario {
+
+    public abstract String getEstado();
+
+    public abstract EstadoUsuario activar();
+
+    public abstract EstadoUsuario desactivar();
+
+
 }
