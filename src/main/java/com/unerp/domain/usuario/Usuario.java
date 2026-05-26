@@ -43,6 +43,7 @@ public class Usuario {
         this.email = email;
         this.passwordHash = passwordHash;
         this.estado = estado;
+        this.estadoString = estado.getEstado();
         this.rolId = rolId;
     }
 

@@ -1,9 +1,8 @@
-package com.unerp.usuario.controller;
+package com.unerp.auth.controller;
 
+import com.unerp.auth.service.AuthLoginService;
 import com.unerp.domain.usuario.Usuario;
-import com.unerp.usuario.service.UsuarioCreateService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,34 +10,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/usuario")
-public class UsuarioCreateController {
+@RequestMapping("/auth")
+public class AuthLoginController {
 
-    private final UsuarioCreateService usuarioCreateService;
+    private final AuthLoginService authLoginService;
 
-    public UsuarioCreateController(UsuarioCreateService usuarioCreateService) {
-        this.usuarioCreateService = usuarioCreateService;
+    public AuthLoginController(AuthLoginService authLoginService) {
+        this.authLoginService = authLoginService;
     }
 
-    @PostMapping("/crear")
-    public ResponseEntity<?> crearUsuario(
-
-            @RequestParam String nombre,
+    @PostMapping("/login")
+    public ResponseEntity<?> login(
             @RequestParam String email,
-            @RequestParam String password,
-            @RequestParam String rolNombre
-    ) {
+            @RequestParam String password
+    ){
         try {
-
-            Usuario usuario = usuarioCreateService.crearUsuario(
-                    nombre,
-                    email,
-                    password,
-                    rolNombre
-            );
-
+            Usuario usuario = authLoginService.login(email, password);
             return ResponseEntity
-                    .status(HttpStatus.CREATED)
+                    .status(HttpStatus.OK)
                     .body(usuario);
         } catch (IllegalArgumentException e) {
             return ResponseEntity
