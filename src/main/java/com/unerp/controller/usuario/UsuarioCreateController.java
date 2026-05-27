@@ -1,9 +1,8 @@
-package com.unerp.usuario.controller;
+package com.unerp.controller.usuario;
 
 import com.unerp.domain.usuario.Usuario;
-import com.unerp.usuario.service.UsuarioCreateService;
+import com.unerp.service.usuario.UsuarioCreateService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

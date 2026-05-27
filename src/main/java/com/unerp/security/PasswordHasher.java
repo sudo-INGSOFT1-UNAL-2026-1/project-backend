@@ -1,4 +1,4 @@
-package com.unerp.auth.security;
+package com.unerp.security;
 
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

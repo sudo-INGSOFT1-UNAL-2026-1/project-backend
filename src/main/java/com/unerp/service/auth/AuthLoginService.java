@@ -1,8 +1,8 @@
-package com.unerp.auth.service;
+package com.unerp.service.auth;
 
-import com.unerp.auth.security.PasswordHasher;
+import com.unerp.security.PasswordHasher;
 import com.unerp.domain.usuario.Usuario;
-import com.unerp.usuario.repository.UsuarioReadRepository;
+import com.unerp.repository.usuario.UsuarioReadRepository;
 import org.springframework.stereotype.Service;
 
 @Service

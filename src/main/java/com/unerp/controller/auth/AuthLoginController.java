@@ -1,6 +1,6 @@
-package com.unerp.auth.controller;
+package com.unerp.controller.auth;
 
-import com.unerp.auth.service.AuthLoginService;
+import com.unerp.service.auth.AuthLoginService;
 import com.unerp.domain.usuario.Usuario;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

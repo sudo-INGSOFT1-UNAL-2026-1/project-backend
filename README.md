@@ -74,3 +74,70 @@ x-www-form-urlencoded
 email=angel@gmail.com
 password=123456
 ```
+
+# Estructura
+```text
+src
+    └── main
+        └── java
+            └── com
+                └── unerp
+                    ├── controller
+                    │
+                    │   ├── auth
+                    │   │   └── AuthLoginController.java
+                    │   │
+                    │   ├── usuario
+                    │   │   └── UsuarioCreateController.java
+                    │   │
+                    │   ├── ventas
+                    │   ├── compras
+                    │   └── inventario
+
+
+                    ├── service
+                    │
+                    │   ├── auth    
+                    │   │   └── AuthLoginService.java
+                    │   │
+                    │   ├── usuario
+                    │   │   └── UsuarioCreateService.java
+                    │   │
+                    │   ├── ventas
+                    │   ├── compras
+                    │   └── inventario
+    
+
+                    ├── repository
+                    │
+                    │   ├── usuario
+                    │   │   ├── UsuarioCreateRepository.java
+                    │   │   └── UsuarioReadRepository.java
+                    │   │
+                    │   ├── rol
+                    │   │   └── RolReadRepository.java
+                    │   │
+                    │   ├── ventas
+                    │   ├── compras
+                    │   └── inventario
+    
+
+                    ├── domain
+                    │
+                    │   ├── usuario
+                    │   │   ├── Usuario.java
+                    │   │   ├── UsuarioBuilder.java
+                    │   │   │
+                    │   │   └── estado
+                    │   │       ├── EstadoUsuario.java
+                    │   │       ├── ActivoState.java
+                    │   │       └── InactivoState.java
+                    │   │
+                    │   └── rol
+                    │       ├── Rol.java
+                    │       └── RolNombre.java
+
+
+                    └── security
+                        └── PasswordHasher.java
+```

@@ -1,14 +1,14 @@
-package com.unerp.usuario.service;
+package com.unerp.service.usuario;
 
-import com.unerp.auth.security.PasswordHasher;
+import com.unerp.security.PasswordHasher;
 import com.unerp.domain.rol.Rol;
 import com.unerp.domain.rol.RolNombre;
 import com.unerp.domain.usuario.Usuario;
 import com.unerp.domain.usuario.UsuarioBuilder;
 import com.unerp.domain.usuario.estado.ActivoState;
-import com.unerp.usuario.repository.RolReadRepository;
-import com.unerp.usuario.repository.UsuarioCreateRepository;
-import com.unerp.usuario.repository.UsuarioReadRepository;
+import com.unerp.repository.usuario.RolReadRepository;
+import com.unerp.repository.usuario.UsuarioCreateRepository;
+import com.unerp.repository.usuario.UsuarioReadRepository;
 import org.springframework.stereotype.Service;
 
 @Service
