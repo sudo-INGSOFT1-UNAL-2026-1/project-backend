@@ -5,7 +5,7 @@
 ### Endpoint
 
 ```http
-POST /usuario/crear
+POST /user/create
 ```
 
 ### Tipo de Body
@@ -16,12 +16,12 @@ x-www-form-urlencoded
 
 ### Parámetros
 
-| Parámetro | Tipo |
+| Parameter | Type |
 |---|---|
-| nombre | String |
+| name | String |
 | email | String |
 | password | String |
-| nombreRol | String |
+| roleName | String |
 
 ### Roles disponibles
 
@@ -34,15 +34,21 @@ x-www-form-urlencoded
 - EMPLEADO_COMPRAS_INVENTARIO
 - EMPLEADO_TOTAL
 
-## Nota: Si es el primer usuario, se crea como ADMIN_EMPRESA
+## Nota
+
+Si es el primer usuario del sistema, automáticamente se creará como:
+
+```text
+ADMIN_EMPRESA
+```
 
 ### Ejemplo
 
 ```text
-nombre=user
+name=user
 email=user@gmail.com
 password=123456
-nombreRol=EMPLEADO_TOTAL
+roleName=EMPLEADO_TOTAL
 ```
 
 ---
@@ -63,7 +69,7 @@ x-www-form-urlencoded
 
 ### Parámetros
 
-| Parámetro | Tipo |
+| Parameter | Type |
 |---|---|
 | email | String |
 | password | String |
@@ -75,69 +81,74 @@ email=angel@gmail.com
 password=123456
 ```
 
+---
+
 # Estructura
+
 ```text
 src
-    └── main
-        └── java
-            └── com
-                └── unerp
-                    ├── controller
-                    │
-                    │   ├── auth
-                    │   │   └── AuthLoginController.java
-                    │   │
-                    │   ├── usuario
-                    │   │   └── UsuarioCreateController.java
-                    │   │
-                    │   ├── ventas
-                    │   ├── compras
-                    │   └── inventario
+└── main
+    └── java
+        └── com
+            └── unerp
+
+                ├── controller
+                │
+                │   ├── auth
+                │   │   └── AuthLoginController.java
+                │   │
+                │   ├── user
+                │   │   └── UserCreateController.java
+                │   │
+                │   ├── sales
+                │   ├── purchases
+                │   └── inventory
 
 
-                    ├── service
-                    │
-                    │   ├── auth    
-                    │   │   └── AuthLoginService.java
-                    │   │
-                    │   ├── usuario
-                    │   │   └── UsuarioCreateService.java
-                    │   │
-                    │   ├── ventas
-                    │   ├── compras
-                    │   └── inventario
-    
-
-                    ├── repository
-                    │
-                    │   ├── usuario
-                    │   │   ├── UsuarioCreateRepository.java
-                    │   │   └── UsuarioReadRepository.java
-                    │   │
-                    │   ├── rol
-                    │   │   └── RolReadRepository.java
-                    │   │
-                    │   ├── ventas
-                    │   ├── compras
-                    │   └── inventario
-    
-
-                    ├── domain
-                    │
-                    │   ├── usuario
-                    │   │   ├── Usuario.java
-                    │   │   ├── UsuarioBuilder.java
-                    │   │   │
-                    │   │   └── estado
-                    │   │       ├── EstadoUsuario.java
-                    │   │       ├── ActivoState.java
-                    │   │       └── InactivoState.java
-                    │   │
-                    │   └── rol
-                    │       ├── Rol.java
-                    │       └── RolNombre.java
+                ├── service
+                │
+                │   ├── auth
+                │   │   └── AuthLoginService.java
+                │   │
+                │   ├── user
+                │   │   └── UserCreateService.java
+                │   │
+                │   ├── sales
+                │   ├── purchases
+                │   └── inventory
 
 
-                    └── security
-                        └── PasswordHasher.java
+                ├── repository
+                │
+                │   ├── user
+                │   │   ├── UserCreateRepository.java
+                │   │   └── UserReadRepository.java
+                │   │
+                │   ├── role
+                │   │   └── RoleReadRepository.java
+                │   │
+                │   ├── sales
+                │   ├── purchases
+                │   └── inventory
+
+
+                ├── domain
+                │
+                │   ├── user
+                │   │   ├── User.java
+                │   │   ├── UserBuilder.java
+                │   │   │
+                │   │   └── state
+                │   │       ├── UserState.java
+                │   │       ├── ActiveState.java
+                │   │       └── InactiveState.java
+                │   │
+                │   └── role
+                │       ├── Role.java
+                │       └── RoleName.java
+
+
+                └── security
+                    ├── PasswordHasher.java
+                    └── SecurityConfig.java
 ```
