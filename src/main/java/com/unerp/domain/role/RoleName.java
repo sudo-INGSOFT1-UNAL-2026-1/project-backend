@@ -1,6 +1,6 @@
-package com.unerp.domain.rol;
+package com.unerp.domain.role;
 
-public class RolNombre {
+public class RoleName {
 
     public static final String ADMIN_EMPRESA =
             "ADMIN_EMPRESA";
@@ -26,6 +26,6 @@ public class RolNombre {
     public static final String EMPLEADO_TOTAL =
             "EMPLEADO_TOTAL";
 
-    private RolNombre() {
+    private RoleName() {
     }
 }

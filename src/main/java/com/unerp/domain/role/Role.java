@@ -1,31 +1,31 @@
-package com.unerp.domain.rol;
+package com.unerp.domain.role;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "rol")
-public class Rol {
+@Table(name = "role")
+public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(unique = true)
-    private String nombre;
+    private String name;
 
-    public Rol() {
+    public Role() {
     }
 
-    public Rol(Integer id, String nombre) {
+    public Role(Integer id, String name) {
         this.id = id;
-        this.nombre = nombre;
+        this.name = name;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 }

@@ -1,7 +1,7 @@
-package com.unerp.controller.usuario;
+package com.unerp.controller.user;
 
-import com.unerp.domain.usuario.Usuario;
-import com.unerp.service.usuario.UsuarioCreateService;
+import com.unerp.domain.user.User;
+import com.unerp.service.user.UserCreateService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,34 +11,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/usuario")
-public class UsuarioCreateController {
+public class UserCreateController {
 
-    private final UsuarioCreateService usuarioCreateService;
+    private final UserCreateService userCreateService;
 
-    public UsuarioCreateController(UsuarioCreateService usuarioCreateService) {
-        this.usuarioCreateService = usuarioCreateService;
+    public UserCreateController(UserCreateService userCreateService) {
+        this.userCreateService = userCreateService;
     }
 
     @PostMapping("/crear")
-    public ResponseEntity<?> crearUsuario(
+    public ResponseEntity<?> createService(
 
-            @RequestParam String nombre,
+            @RequestParam String name,
             @RequestParam String email,
             @RequestParam String password,
-            @RequestParam String rolNombre
+            @RequestParam String roleName
     ) {
         try {
 
-            Usuario usuario = usuarioCreateService.crearUsuario(
-                    nombre,
+            User user = userCreateService.createUser(
+                    name,
                     email,
                     password,
-                    rolNombre
+                    roleName
             );
 
             return ResponseEntity
                     .status(HttpStatus.CREATED)
-                    .body(usuario);
+                    .body(user);
         } catch (IllegalArgumentException e) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
@@ -46,7 +46,7 @@ public class UsuarioCreateController {
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error interno del servidor");
+                    .body(e.getMessage());
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.unerp.controller.auth;
 
 import com.unerp.service.auth.AuthLoginService;
-import com.unerp.domain.usuario.Usuario;
+import com.unerp.domain.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,10 +25,10 @@ public class AuthLoginController {
             @RequestParam String password
     ){
         try {
-            Usuario usuario = authLoginService.login(email, password);
+            User user = authLoginService.login(email, password);
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(usuario);
+                .body(user);
         } catch (IllegalArgumentException e) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
@@ -36,7 +36,7 @@ public class AuthLoginController {
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error interno del servidor");
+                    .body(e.getMessage());
         }
     }
 }

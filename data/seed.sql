@@ -1,9 +1,9 @@
 USE erp_db;
 
 -- =========================
--- ROLES
+-- ROLE / ROL
 -- =========================
-INSERT INTO rol (nombre) VALUES
+INSERT INTO role (name) VALUES
 ('ADMIN_EMPRESA'),
 ('EMPLEADO_VENTAS'),
 ('EMPLEADO_COMPRAS'),
@@ -15,81 +15,82 @@ INSERT INTO rol (nombre) VALUES
 
 -- =========================
 -- PERMISOS
+-- PERMISSION / PERMISO
 -- =========================
-INSERT INTO permiso (nombre) VALUES
-('GESTION_USUARIOS'),
+INSERT INTO permission (name) VALUES
 ('GESTION_ROLES'),
 ('GESTION_VENTAS'),
 ('GESTION_COMPRAS'),
 ('GESTION_INVENTARIO');
 
 -- =========================
--- RELACION ROL - PERMISO
+-- ROLE - PERMISSION RELATION
+-- =========================
+-- ROLE - PERMISSION RELATION / RELACION ROL - PERMISO
 -- =========================
 
 -- ADMIN_EMPRESA
-INSERT INTO rol_permiso (rol_id, permiso_id)
+INSERT INTO role_permission (role_id, permission_id)
 SELECT r.id, p.id
-FROM rol r, permiso p
-WHERE r.nombre = 'ADMIN_EMPRESA';
-
+FROM role r, permission p
+WHERE r.name = 'ADMIN_EMPRESA';
 -- EMPLEADO_VENTAS
-INSERT INTO rol_permiso (rol_id, permiso_id)
+INSERT INTO role_permission (role_id, permission_id)
 SELECT r.id, p.id
-FROM rol r, permiso p
-WHERE r.nombre = 'EMPLEADO_VENTAS'
-AND p.nombre = 'GESTION_VENTAS';
+FROM role r, permission p
+WHERE r.name = 'EMPLEADO_VENTAS'
+AND p.name = 'GESTION_VENTAS';
 
 -- EMPLEADO_COMPRAS
-INSERT INTO rol_permiso (rol_id, permiso_id)
+INSERT INTO role_permission (role_id, permission_id)
 SELECT r.id, p.id
-FROM rol r, permiso p
-WHERE r.nombre = 'EMPLEADO_COMPRAS'
-AND p.nombre = 'GESTION_COMPRAS';
+FROM role r, permission p
+WHERE r.name = 'EMPLEADO_COMPRAS'
+AND p.name = 'GESTION_COMPRAS';
 
 -- EMPLEADO_INVENTARIO
-INSERT INTO rol_permiso (rol_id, permiso_id)
+INSERT INTO role_permission (role_id, permission_id)
 SELECT r.id, p.id
-FROM rol r, permiso p
-WHERE r.nombre = 'EMPLEADO_INVENTARIO'
-AND p.nombre = 'GESTION_INVENTARIO';
+FROM role r, permission p
+WHERE r.name = 'EMPLEADO_INVENTARIO'
+AND p.name = 'GESTION_INVENTARIO';
 
 -- EMPLEADO_VENTAS_COMPRAS
-INSERT INTO rol_permiso (rol_id, permiso_id)
+INSERT INTO role_permission (role_id, permission_id)
 SELECT r.id, p.id
-FROM rol r, permiso p
-WHERE r.nombre = 'EMPLEADO_VENTAS_COMPRAS'
-AND p.nombre IN (
+FROM role r, permission p
+WHERE r.name = 'EMPLEADO_VENTAS_COMPRAS'
+AND p.name IN (
     'GESTION_VENTAS',
     'GESTION_COMPRAS'
 );
 
 -- EMPLEADO_VENTAS_INVENTARIO
-INSERT INTO rol_permiso (rol_id, permiso_id)
+INSERT INTO role_permission (role_id, permission_id)
 SELECT r.id, p.id
-FROM rol r, permiso p
-WHERE r.nombre = 'EMPLEADO_VENTAS_INVENTARIO'
-AND p.nombre IN (
+FROM role r, permission p
+WHERE r.name = 'EMPLEADO_VENTAS_INVENTARIO'
+AND p.name IN (
     'GESTION_VENTAS',
     'GESTION_INVENTARIO'
 );
 
 -- EMPLEADO_COMPRAS_INVENTARIO
-INSERT INTO rol_permiso (rol_id, permiso_id)
+INSERT INTO role_permission (role_id, permission_id)
 SELECT r.id, p.id
-FROM rol r, permiso p
-WHERE r.nombre = 'EMPLEADO_COMPRAS_INVENTARIO'
-AND p.nombre IN (
+FROM role r, permission p
+WHERE r.name = 'EMPLEADO_COMPRAS_INVENTARIO'
+AND p.name IN (
     'GESTION_COMPRAS',
     'GESTION_INVENTARIO'
 );
 
 -- EMPLEADO_TOTAL
-INSERT INTO rol_permiso (rol_id, permiso_id)
+INSERT INTO role_permission (role_id, permission_id)
 SELECT r.id, p.id
-FROM rol r, permiso p
-WHERE r.nombre = 'EMPLEADO_TOTAL'
-AND p.nombre IN (
+FROM role r, permission p
+WHERE r.name = 'EMPLEADO_TOTAL'
+AND p.name IN (
     'GESTION_VENTAS',
     'GESTION_COMPRAS',
     'GESTION_INVENTARIO'

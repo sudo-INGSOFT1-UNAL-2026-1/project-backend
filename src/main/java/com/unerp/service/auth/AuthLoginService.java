@@ -1,55 +1,55 @@
 package com.unerp.service.auth;
 
 import com.unerp.security.PasswordHasher;
-import com.unerp.domain.usuario.Usuario;
-import com.unerp.repository.usuario.UsuarioReadRepository;
+import com.unerp.domain.user.User;
+import com.unerp.repository.user.UserReadRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthLoginService {
 
-    private final UsuarioReadRepository usuarioReadRepository;
+    private final UserReadRepository userReadRepository;
 
     private final PasswordHasher passwordHasher;
 
     public AuthLoginService(
-            UsuarioReadRepository usuarioReadRepository,
+            UserReadRepository userReadRepository,
             PasswordHasher passwordHasher
     ) {
-        this.usuarioReadRepository = usuarioReadRepository;
+        this.userReadRepository = userReadRepository;
         this.passwordHasher = passwordHasher;
     }
 
-    public Usuario login(String email, String password) {
+    public User login(String email, String password) {
 
-        Usuario usuario = usuarioReadRepository.findByEmail(email);
+        User user = userReadRepository.findByEmail(email);
 
-        validarUsuarioExiste(usuario);
+        validateUserExists(user);
 
-        validarPassword(password, usuario.getPasswordHash());
+        validatePassword(password, user.getPasswordHash());
 
-        validarUsuarioActivo(usuario);
+        validateActiveUser(user);
 
-        return usuario;
+        return user;
     }
 
-    private void validarUsuarioExiste(Usuario usuario) {
-        if (usuario == null) {
+    private void validateUserExists(User user) {
+        if (user == null) {
             throw new IllegalArgumentException("El usuario no existe");
         }
     }
 
-    private void validarPassword(String password, String passwordHash) {
+    private void validatePassword(String password, String passwordHash) {
         if (!passwordHasher.matches(password, passwordHash)) {
             throw new IllegalArgumentException("Contraseña incorrecta");
         }
     }
 
-    private void validarUsuarioActivo(Usuario usuario) {
+    private void validateActiveUser(User user) {
 
-        String estado = usuario.getEstado().getEstado();
+        String state = user.getState().getState();
 
-        if (!estado.equals("Activo")) {
+        if (!state.equals("Activo")) {
             throw new IllegalArgumentException("El usuario no esta activo");
         }
     }

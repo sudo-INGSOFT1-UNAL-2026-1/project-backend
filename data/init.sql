@@ -5,189 +5,164 @@ DROP DATABASE IF EXISTS erp_db;
 CREATE DATABASE erp_db;
 USE erp_db;
 
--- =========================
--- ROL
--- =========================
-CREATE TABLE rol (
+-- ROLE / ROL
+CREATE TABLE role (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50) NOT NULL UNIQUE
+    name VARCHAR(50) NOT NULL UNIQUE
 ) ENGINE=InnoDB;
 
--- =========================
--- PERMISO
--- =========================
-CREATE TABLE permiso (
+-- PERMISSION / PERMISO
+CREATE TABLE permission (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL UNIQUE
+    name VARCHAR(100) NOT NULL UNIQUE
 ) ENGINE=InnoDB;
 
--- =========================
--- RELACION ROL - PERMISO
--- =========================
-CREATE TABLE rol_permiso (
-    rol_id INT,
-    permiso_id INT,
-    PRIMARY KEY (rol_id, permiso_id),
+-- ROLE - PERMISSION RELATION / RELACION ROL - PERMISO
+CREATE TABLE role_permission (
+    role_id INT,
+    permission_id INT,
+    PRIMARY KEY (role_id, permission_id),
 
-    FOREIGN KEY (rol_id) REFERENCES rol(id) ON DELETE CASCADE,
-    FOREIGN KEY (permiso_id) REFERENCES permiso(id) ON DELETE CASCADE
+    FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE CASCADE,
+    FOREIGN KEY (permission_id) REFERENCES permission(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
--- =========================
--- USUARIO
--- =========================
-CREATE TABLE usuario (
+-- USER / USUARIO
+CREATE TABLE user (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
+    name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
-    estado ENUM('activo', 'inactivo') DEFAULT 'activo',
-    rol_id INT,
+    status ENUM('activo', 'inactivo') DEFAULT 'activo',
+    role_id INT,
 
-    FOREIGN KEY (rol_id) REFERENCES rol(id)
+    FOREIGN KEY (role_id) REFERENCES role(id)
         ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- =========================
--- CLIENTE
--- =========================
-CREATE TABLE cliente (
+-- CUSTOMER / CLIENTE
+CREATE TABLE customer (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    direccion VARCHAR(255)
+    name VARCHAR(100) NOT NULL,
+    address VARCHAR(255)
 ) ENGINE=InnoDB;
 
--- =========================
--- PROVEEDOR
--- =========================
-CREATE TABLE proveedor (
+-- SUPPLIER / PROVEEDOR
+CREATE TABLE supplier (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL
+    name VARCHAR(100) NOT NULL
 ) ENGINE=InnoDB;
 
--- =========================
--- PRODUCTO
--- =========================
-CREATE TABLE producto (
+-- PRODUCT / PRODUCTO
+CREATE TABLE product (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    descripcion TEXT,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
     stock INT NOT NULL,
-    precio DECIMAL(10,2) NOT NULL,
-    lote VARCHAR(50),
-    fecha_vencimiento DATE,
-    proveedor_id INT,
+    price DECIMAL(10,2) NOT NULL,
+    batch VARCHAR(50),
+    expiration_date DATE,
+    supplier_id INT,
 
-    FOREIGN KEY (proveedor_id) REFERENCES proveedor(id)
+    FOREIGN KEY (supplier_id) REFERENCES supplier(id)
         ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- =========================
--- VENTA
--- =========================
-CREATE TABLE venta (
+-- SALE / VENTA
+CREATE TABLE sale (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    cliente_id INT NOT NULL,
-    usuario_id INT NOT NULL,
-    fecha_pago DATE,
-    fecha_entrega DATE,
-    estado ENUM('entregado', 'por enviar', 'en camino', 'cancelado') NOT NULL,
-    costo_total DECIMAL(10,2) DEFAULT 0,
+    customer_id INT NOT NULL,
+    user_id INT NOT NULL,
+    payment_date DATE,
+    delivery_date DATE,
+    status ENUM('entregado', 'por enviar', 'en camino', 'cancelado') NOT NULL,
+    total_cost DECIMAL(10,2) DEFAULT 0,
 
-    FOREIGN KEY (cliente_id) REFERENCES cliente(id)
+    FOREIGN KEY (customer_id) REFERENCES customer(id)
         ON DELETE RESTRICT ON UPDATE CASCADE,
-    FOREIGN KEY (usuario_id) REFERENCES usuario(id)
+    FOREIGN KEY (user_id) REFERENCES user(id)
         ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- =========================
--- DETALLE VENTA
--- =========================
-CREATE TABLE venta_producto (
+-- SALE DETAIL / DETALLE VENTA
+CREATE TABLE sale_product (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    venta_id INT NOT NULL,
-    producto_id INT NOT NULL,
-    cantidad INT NOT NULL,
-    precio_unitario DECIMAL(10,2) NOT NULL,
+    sale_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    unit_price DECIMAL(10,2) NOT NULL,
     subtotal DECIMAL(10,2),
 
-    FOREIGN KEY (venta_id) REFERENCES venta(id)
+    FOREIGN KEY (sale_id) REFERENCES sale(id)
         ON DELETE CASCADE,
-    FOREIGN KEY (producto_id) REFERENCES producto(id)
+    FOREIGN KEY (product_id) REFERENCES product(id)
         ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
--- =========================
--- COMPRA
--- =========================
-CREATE TABLE compra (
+-- PURCHASE / COMPRA
+CREATE TABLE purchase (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    proveedor_id INT NOT NULL,
-    usuario_id INT NOT NULL,
-    fecha_pago DATE,
-    fecha_entrega DATE,
-    estado ENUM('pendiente', 'recibido', 'pagado', 'cancelado') NOT NULL,
-    costo_total DECIMAL(10,2) DEFAULT 0,
+    supplier_id INT NOT NULL,
+    user_id INT NOT NULL,
+    payment_date DATE,
+    delivery_date DATE,
+    status ENUM('pendiente', 'recibido', 'pagado', 'cancelado') NOT NULL,
+    total_cost DECIMAL(10,2) DEFAULT 0,
 
-    FOREIGN KEY (proveedor_id) REFERENCES proveedor(id)
+    FOREIGN KEY (supplier_id) REFERENCES supplier(id)
         ON DELETE RESTRICT ON UPDATE CASCADE,
-    FOREIGN KEY (usuario_id) REFERENCES usuario(id)
+    FOREIGN KEY (user_id) REFERENCES user(id)
         ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
--- =========================
--- DETALLE COMPRA
--- =========================
-CREATE TABLE compra_producto (
+-- PURCHASE DETAIL / DETALLE COMPRA
+CREATE TABLE purchase_product (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    compra_id INT NOT NULL,
-    producto_id INT NOT NULL,
-    cantidad INT NOT NULL,
-    precio_unitario DECIMAL(10,2) NOT NULL,
+    purchase_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    unit_price DECIMAL(10,2) NOT NULL,
     subtotal DECIMAL(10,2),
 
-    FOREIGN KEY (compra_id) REFERENCES compra(id)
+    FOREIGN KEY (purchase_id) REFERENCES purchase(id)
         ON DELETE CASCADE,
-    FOREIGN KEY (producto_id) REFERENCES producto(id)
+    FOREIGN KEY (product_id) REFERENCES product(id)
         ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
--- =========================
--- TRIGGERS (SIN DELIMITER)
--- =========================
 
--- SUBTOTAL VENTA
-CREATE TRIGGER trg_subtotal_venta
-BEFORE INSERT ON venta_producto
+-- SALE SUBTOTAL / SUBTOTAL VENTA
+CREATE TRIGGER trg_sale_subtotal
+BEFORE INSERT ON sale_product
 FOR EACH ROW
-SET NEW.subtotal = NEW.cantidad * NEW.precio_unitario;
+SET NEW.subtotal = NEW.quantity * NEW.unit_price;
 
--- SUBTOTAL COMPRA
-CREATE TRIGGER trg_subtotal_compra
-BEFORE INSERT ON compra_producto
+-- PURCHASE SUBTOTAL / SUBTOTAL COMPRA
+CREATE TRIGGER trg_purchase_subtotal
+BEFORE INSERT ON purchase_product
 FOR EACH ROW
-SET NEW.subtotal = NEW.cantidad * NEW.precio_unitario;
+SET NEW.subtotal = NEW.quantity * NEW.unit_price;
 
--- TOTAL VENTA
-CREATE TRIGGER trg_total_venta
-AFTER INSERT ON venta_producto
+-- SALE TOTAL / TOTAL VENTA
+CREATE TRIGGER trg_sale_total
+AFTER INSERT ON sale_product
 FOR EACH ROW
-UPDATE venta
-SET costo_total = (
+UPDATE sale
+SET total_cost = (
     SELECT SUM(subtotal)
-    FROM venta_producto
-    WHERE venta_id = NEW.venta_id
+    FROM sale_product
+    WHERE sale_id = NEW.sale_id
 )
-WHERE id = NEW.venta_id;
+WHERE id = NEW.sale_id;
 
--- TOTAL COMPRA
-CREATE TRIGGER trg_total_compra
-AFTER INSERT ON compra_producto
+-- PURCHASE TOTAL / TOTAL COMPRA
+CREATE TRIGGER trg_purchase_total
+AFTER INSERT ON purchase_product
 FOR EACH ROW
-UPDATE compra
-SET costo_total = (
+UPDATE purchase
+SET total_cost = (
     SELECT SUM(subtotal)
-    FROM compra_producto
-    WHERE compra_id = NEW.compra_id
+    FROM purchase_product
+    WHERE purchase_id = NEW.purchase_id
 )
-WHERE id = NEW.compra_id;
+WHERE id = NEW.purchase_id;
