@@ -1,5 +1,6 @@
 package com.unerp.domain.user;
 
+import com.unerp.domain.role.Role;
 import com.unerp.domain.user.state.ActiveState;
 import com.unerp.domain.user.state.UserState;
 import com.unerp.domain.user.state.InactiveState;
@@ -27,8 +28,10 @@ public class User {
     @Column(name = "status")
     private String stateString;
 
-    @Column(name = "role_id")
-    private Integer roleId;
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
 
     public User(
             Integer id,
@@ -36,15 +39,15 @@ public class User {
             String email,
             String passwordHash,
             UserState state,
-            Integer roleId
+            Role role
     ) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.passwordHash = passwordHash;
         this.state = state;
-        this.stateString = state.getState();
-        this.roleId = roleId;
+        this.stateString = state.getName();
+        this.role = role;
     }
 
     public User() {
@@ -79,8 +82,8 @@ public class User {
         return state;
     }
 
-    public Integer getRoleId() {
-        return roleId;
+    public Role getRole() {
+        return role;
     }
 
     public void activate() {

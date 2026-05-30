@@ -1,5 +1,6 @@
 package com.unerp.domain.user;
 
+import com.unerp.domain.role.Role;
 import com.unerp.domain.user.state.UserState;
 
 public class UserBuilder {
@@ -9,7 +10,7 @@ public class UserBuilder {
     private String email;
     private String passwordHash;
     private UserState state;
-    private Integer roleId;
+    private Role role;
 
 
     public UserBuilder setId(Integer id) {
@@ -37,12 +38,12 @@ public class UserBuilder {
         return this;
     }
 
-    public UserBuilder setRoleId(Integer roleId) {
-        this.roleId = roleId;
+    public UserBuilder setRole(Role role) {
+        this.role = role;
         return this;
     }
 
     public User build() {
-        return new User(id, name, email, passwordHash, state, roleId);
+        return new User(id, name, email, passwordHash, state, role);
     }
 }

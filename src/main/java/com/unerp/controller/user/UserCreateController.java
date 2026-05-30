@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/usuario")
 public class UserCreateController {
@@ -20,7 +23,7 @@ public class UserCreateController {
     }
 
     @PostMapping("/crear")
-    public ResponseEntity<?> createService(
+    public ResponseEntity<?> createUser(
 
             @RequestParam String name,
             @RequestParam String email,
@@ -28,7 +31,6 @@ public class UserCreateController {
             @RequestParam String roleName
     ) {
         try {
-
             User user = userCreateService.createUser(
                     name,
                     email,
@@ -36,9 +38,16 @@ public class UserCreateController {
                     roleName
             );
 
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("id", user.getId());
+            responseBody.put("name", user.getName());
+            responseBody.put("email", user.getEmail());
+            responseBody.put("state", user.getState().getName());
+            responseBody.put("role", user.getRole().getName());
+
             return ResponseEntity
                     .status(HttpStatus.CREATED)
-                    .body(user);
+                    .body(responseBody);
         } catch (IllegalArgumentException e) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)

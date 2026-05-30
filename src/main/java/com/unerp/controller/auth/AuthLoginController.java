@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthLoginController {
@@ -26,9 +29,17 @@ public class AuthLoginController {
     ){
         try {
             User user = authLoginService.login(email, password);
+
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("id", user.getId());
+            responseBody.put("name", user.getName());
+            responseBody.put("email", user.getEmail());
+            responseBody.put("state", user.getState().getName());
+            responseBody.put("role", user.getRole().getName());
+
             return ResponseEntity
                     .status(HttpStatus.OK)
-                .body(user);
+                    .body(responseBody);
         } catch (IllegalArgumentException e) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)

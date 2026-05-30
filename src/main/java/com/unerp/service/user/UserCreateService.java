@@ -39,7 +39,7 @@ public class UserCreateService {
     ) {
         validateAvailableEmail(email);
 
-        Role role = getRoleName(roleName);
+        Role role = getRole(roleName);
 
         String passwordHash = passwordHasher.hash(password);
 
@@ -48,7 +48,7 @@ public class UserCreateService {
                 .setEmail(email)
                 .setPasswordHash(passwordHash)
                 .setState(new ActiveState())
-                .setRoleId(role.getId())
+                .setRole(role)
                 .build();
 
         return userCreateRepository.save(newUser);
@@ -60,7 +60,7 @@ public class UserCreateService {
         }
     }
 
-    private Role getRoleName(String roleName) {
+    private Role getRole(String roleName) {
 
         Role role;
 

@@ -47,7 +47,7 @@ public class AuthLoginService {
 
     private void validateActiveUser(User user) {
 
-        String state = user.getState().getState();
+        String state = user.getState().getName();
 
         if (!state.equals("Activo")) {
             throw new IllegalArgumentException("El usuario no esta activo");

@@ -3,7 +3,7 @@ package com.unerp.domain.user.state;
 public class InactiveState extends UserState {
 
     @Override
-    public String getState() {
+    public String getName() {
         return "Inactivo";
     }
 
