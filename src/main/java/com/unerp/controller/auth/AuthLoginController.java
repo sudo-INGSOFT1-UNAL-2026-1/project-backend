@@ -2,6 +2,7 @@ package com.unerp.controller.auth;
 
 import com.unerp.service.auth.AuthLoginService;
 import com.unerp.domain.user.User;
+import com.unerp.service.auth.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,10 +18,14 @@ import java.util.Map;
 public class AuthLoginController {
 
     private final AuthLoginService authLoginService;
+    private final JwtService jwtService;
 
-    public AuthLoginController(AuthLoginService authLoginService) {
+    public AuthLoginController (AuthLoginService authLoginService, JwtService jwtService) {
         this.authLoginService = authLoginService;
+        this.jwtService = jwtService;
     }
+
+
 
     @PostMapping("/login")
     public ResponseEntity<?> login(
@@ -30,7 +35,10 @@ public class AuthLoginController {
         try {
             User user = authLoginService.login(email, password);
 
+            String token = jwtService.generateToken(user);
+
             Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("token", token);
             responseBody.put("id", user.getId());
             responseBody.put("name", user.getName());
             responseBody.put("email", user.getEmail());
