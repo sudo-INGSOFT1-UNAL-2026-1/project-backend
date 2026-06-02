@@ -1,5 +1,6 @@
 package com.unerp.controller.auth;
 
+import com.unerp.service.auth.ActiveSessionService;
 import com.unerp.service.auth.AuthLoginService;
 import com.unerp.domain.user.User;
 import com.unerp.service.auth.JwtService;
@@ -19,10 +20,16 @@ public class AuthLoginController {
 
     private final AuthLoginService authLoginService;
     private final JwtService jwtService;
+    private final ActiveSessionService activeSessionService;
 
-    public AuthLoginController (AuthLoginService authLoginService, JwtService jwtService) {
+    public AuthLoginController (
+            AuthLoginService authLoginService,
+            JwtService jwtService,
+            ActiveSessionService activeSessionService
+    ) {
         this.authLoginService = authLoginService;
         this.jwtService = jwtService;
+        this.activeSessionService = activeSessionService;
     }
 
 
@@ -33,9 +40,14 @@ public class AuthLoginController {
             @RequestParam String password
     ){
         try {
+
+            activeSessionService.validateNoActiveSession();
+
             User user = authLoginService.login(email, password);
 
             String token = jwtService.generateToken(user);
+
+            activeSessionService.setActiveToken(token);
 
             Map<String, Object> responseBody = new HashMap<>();
             responseBody.put("token", token);
