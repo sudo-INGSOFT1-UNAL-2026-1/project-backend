@@ -7,7 +7,7 @@ import com.unerp.domain.user.User;
 import com.unerp.domain.user.UserBuilder;
 import com.unerp.domain.user.state.ActiveState;
 import com.unerp.repository.user.RoleReadRepository;
-import com.unerp.repository.user.UserCreateRepository;
+import com.unerp.repository.user.UserWriteRepository;
 import com.unerp.repository.user.UserReadRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,18 +15,18 @@ import org.springframework.stereotype.Service;
 public class UserCreateService {
 
     private final UserReadRepository userReadRepository;
-    private final UserCreateRepository userCreateRepository;
+    private final UserWriteRepository userWriteRepository;
     private final RoleReadRepository roleReadRepository;
     private final PasswordHasher passwordHasher;
 
     public UserCreateService(
             UserReadRepository userReadRepository,
-            UserCreateRepository userCreateRepository,
+            UserWriteRepository userWriteRepository,
             RoleReadRepository roleReadRepository,
             PasswordHasher passwordHasher
     ) {
         this.userReadRepository = userReadRepository;
-        this.userCreateRepository = userCreateRepository;
+        this.userWriteRepository = userWriteRepository;
         this.passwordHasher = passwordHasher;
         this.roleReadRepository = roleReadRepository;
     }
@@ -51,7 +51,7 @@ public class UserCreateService {
                 .setRole(role)
                 .build();
 
-        return userCreateRepository.save(newUser);
+        return userWriteRepository.save(newUser);
     }
 
     private void validateAvailableEmail(String email) {
