@@ -1,4 +1,5 @@
 @echo off
+setlocal enabledelayedexpansion
 
 echo =========================================
 echo  PREPARACION DEL PROYECTO ERP
@@ -11,10 +12,16 @@ REM -----------------------------------------------------
 
 echo [1/8] Cargando variables del archivo .env...
 
-for /f "tokens=1,2 delims==" %%a in (.env) do (
+IF NOT EXIST .env (
+    echo ERROR: No existe el archivo .env
+    exit /b 1
+)
+
+for /f "usebackq tokens=1,* delims==" %%a in (`findstr /v "^#" .env`) do (
     set %%a=%%b
 )
 
+echo Variables cargadas correctamente.
 echo.
 
 REM -----------------------------------------------------
@@ -23,11 +30,14 @@ REM -----------------------------------------------------
 
 echo [2/8] Verificando Java...
 
-java -version
+java -version > nul 2>&1
+
 IF %ERRORLEVEL% NEQ 0 (
     echo ERROR: Java no esta instalado.
-    exit /b
+    exit /b 1
 )
+
+java -version
 
 echo.
 
@@ -37,11 +47,14 @@ REM -----------------------------------------------------
 
 echo [3/8] Verificando Docker...
 
-docker --version
+docker --version > nul 2>&1
+
 IF %ERRORLEVEL% NEQ 0 (
     echo ERROR: Docker no esta instalado.
-    exit /b
+    exit /b 1
 )
+
+docker --version
 
 echo.
 
@@ -53,6 +66,11 @@ echo [4/8] Levantando contenedores Docker...
 
 docker compose up -d
 
+IF %ERRORLEVEL% NEQ 0 (
+    echo ERROR: No se pudieron iniciar los contenedores.
+    exit /b 1
+)
+
 echo.
 
 REM -----------------------------------------------------
@@ -63,6 +81,7 @@ echo [5/8] Esperando inicio de MySQL...
 
 timeout /t 15 > nul
 
+echo MySQL deberia estar listo.
 echo.
 
 REM -----------------------------------------------------
@@ -71,10 +90,49 @@ REM -----------------------------------------------------
 
 echo [6/8] Ejecutando scripts SQL...
 
-docker exec -i sistema_gestion_db mysql -u root -p%MYSQL_ROOT_PASSWORD% %MYSQL_DATABASE% < sql/init.sql
+set CONTAINER_NAME=erp_mysql
 
-docker exec -i sistema_gestion_db mysql -u root -p%MYSQL_ROOT_PASSWORD% %MYSQL_DATABASE% < sql/seed.sql
+REM Verificar contenedor
+docker ps --format "{{.Names}}" | findstr /x "%CONTAINER_NAME%" > nul
 
+IF %ERRORLEVEL% NEQ 0 (
+    echo ERROR: El contenedor %CONTAINER_NAME% no esta corriendo.
+    docker ps
+    exit /b 1
+)
+
+REM Verificar init.sql
+IF NOT EXIST data\init.sql (
+    echo ERROR: No existe data\init.sql
+    exit /b 1
+)
+
+echo Importando init.sql...
+
+docker exec -i %CONTAINER_NAME% mysql -u root -p%MYSQL_ROOT_PASSWORD% %MYSQL_DATABASE% < data\init.sql
+
+IF %ERRORLEVEL% NEQ 0 (
+    echo ERROR: Fallo la ejecucion de init.sql
+    exit /b 1
+)
+
+REM Verificar seed.sql
+IF EXIST data\seed.sql (
+
+    echo Importando seed.sql...
+
+    docker exec -i %CONTAINER_NAME% mysql -u root -p%MYSQL_ROOT_PASSWORD% %MYSQL_DATABASE% < data\seed.sql
+
+    IF !ERRORLEVEL! NEQ 0 (
+        echo ERROR: Fallo la ejecucion de seed.sql
+        exit /b 1
+    )
+
+) ELSE (
+    echo ADVERTENCIA: No existe data\seed.sql
+)
+
+echo Scripts SQL ejecutados correctamente.
 echo.
 
 REM -----------------------------------------------------
@@ -84,11 +142,36 @@ REM -----------------------------------------------------
 echo [7/8] Instalando dependencias y ejecutando pruebas...
 
 IF EXIST mvnw.cmd (
+
     call mvnw.cmd clean install
+
+    IF %ERRORLEVEL% NEQ 0 (
+        echo ERROR: Fallo Maven clean install
+        exit /b 1
+    )
+
     call mvnw.cmd test
+
+    IF %ERRORLEVEL% NEQ 0 (
+        echo ERROR: Fallaron los tests
+        exit /b 1
+    )
+
 ) ELSE (
+
     mvn clean install
+
+    IF %ERRORLEVEL% NEQ 0 (
+        echo ERROR: Fallo Maven clean install
+        exit /b 1
+    )
+
     mvn test
+
+    IF %ERRORLEVEL% NEQ 0 (
+        echo ERROR: Fallaron los tests
+        exit /b 1
+    )
 )
 
 echo.
@@ -97,7 +180,7 @@ REM -----------------------------------------------------
 REM BLOQUE 8: INICIAR SPRING BOOT
 REM -----------------------------------------------------
 
-echo [8/8] Iniciando aplicación Spring Boot...
+echo [8/8] Iniciando aplicacion Spring Boot...
 
 IF EXIST mvnw.cmd (
     call mvnw.cmd spring-boot:run
