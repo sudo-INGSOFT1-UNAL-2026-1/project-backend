@@ -10,7 +10,6 @@ import com.unerp.domain.user.state.ActiveState;
 import com.unerp.repository.user.RoleReadRepository;
 import com.unerp.repository.user.UserWriteRepository;
 import com.unerp.repository.user.UserReadRepository;
-import com.unerp.service.auth.ActiveSessionService;
 import com.unerp.service.auth.AuthorizationService;
 import org.springframework.stereotype.Service;
 
@@ -22,22 +21,19 @@ public class UserCreateService {
     private final RoleReadRepository roleReadRepository;
     private final PasswordHasher passwordHasher;
     private final AuthorizationService authorizationService;
-    private final ActiveSessionService activeSessionService;
 
     public UserCreateService(
             UserReadRepository userReadRepository,
             UserWriteRepository userWriteRepository,
             RoleReadRepository roleReadRepository,
             PasswordHasher passwordHasher,
-            AuthorizationService authorizationService,
-            ActiveSessionService activeSessionService
+            AuthorizationService authorizationService
     ) {
         this.userReadRepository = userReadRepository;
         this.userWriteRepository = userWriteRepository;
         this.passwordHasher = passwordHasher;
         this.roleReadRepository = roleReadRepository;
         this.authorizationService = authorizationService;
-        this.activeSessionService = activeSessionService;
 
     }
 
@@ -50,10 +46,9 @@ public class UserCreateService {
         validateAvailableEmail(email);
 
         Role role;
-        String token = activeSessionService.getActiveToken();
 
         if (notIsFirstUser()) {
-            authorizationService.validatePermission(token, PermissionName.GESTION_ROLES);
+            authorizationService.validatePermission(PermissionName.GESTION_ROLES);
             role = getRole(roleName);
         } else {
             role = getRole(RoleName.ADMIN_EMPRESA);

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/usuario")
+@RequestMapping("/user")
 public class UserCreateController {
 
     private final UserCreateService userCreateService;
@@ -19,7 +19,7 @@ public class UserCreateController {
         this.userCreateService = userCreateService;
     }
 
-    @PostMapping("/crear")
+    @PostMapping("/create")
     public ResponseEntity<?> createUser(
 
             @RequestParam String name,
