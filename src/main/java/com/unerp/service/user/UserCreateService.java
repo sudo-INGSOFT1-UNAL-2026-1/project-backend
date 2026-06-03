@@ -1,5 +1,6 @@
 package com.unerp.service.user;
 
+import com.unerp.domain.permission.PermissionName;
 import com.unerp.domain.role.RoleName;
 import com.unerp.security.PasswordHasher;
 import com.unerp.domain.role.Role;
@@ -9,6 +10,8 @@ import com.unerp.domain.user.state.ActiveState;
 import com.unerp.repository.user.RoleReadRepository;
 import com.unerp.repository.user.UserWriteRepository;
 import com.unerp.repository.user.UserReadRepository;
+import com.unerp.service.auth.ActiveSessionService;
+import com.unerp.service.auth.AuthorizationService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,17 +21,24 @@ public class UserCreateService {
     private final UserWriteRepository userWriteRepository;
     private final RoleReadRepository roleReadRepository;
     private final PasswordHasher passwordHasher;
+    private final AuthorizationService authorizationService;
+    private final ActiveSessionService activeSessionService;
 
     public UserCreateService(
             UserReadRepository userReadRepository,
             UserWriteRepository userWriteRepository,
             RoleReadRepository roleReadRepository,
-            PasswordHasher passwordHasher
+            PasswordHasher passwordHasher,
+            AuthorizationService authorizationService,
+            ActiveSessionService activeSessionService
     ) {
         this.userReadRepository = userReadRepository;
         this.userWriteRepository = userWriteRepository;
         this.passwordHasher = passwordHasher;
         this.roleReadRepository = roleReadRepository;
+        this.authorizationService = authorizationService;
+        this.activeSessionService = activeSessionService;
+
     }
 
     public User createUser(
@@ -39,7 +49,15 @@ public class UserCreateService {
     ) {
         validateAvailableEmail(email);
 
-        Role role = getRole(roleName);
+        Role role;
+        String token = activeSessionService.getActiveToken();
+
+        if (notIsFirstUser()) {
+            authorizationService.validatePermission(token, PermissionName.GESTION_ROLES);
+            role = getRole(roleName);
+        } else {
+            role = getRole(RoleName.ADMIN_EMPRESA);
+        }
 
         String passwordHash = passwordHasher.hash(password);
 
@@ -62,16 +80,14 @@ public class UserCreateService {
 
     private Role getRole(String roleName) {
 
-        Role role;
-
-        if (userReadRepository.count() != 0) {
-            role = roleReadRepository.findByName(roleName);
-            if (role == null) {
-                throw new IllegalArgumentException("El rol especificado no existe");
+        Role role = roleReadRepository.findByName(roleName);
+        if (role == null) {
+            throw new IllegalArgumentException("El rol especificado no existe");
         }
         return role;
     }
-        role = roleReadRepository.findByName(RoleName.ADMIN_EMPRESA);
-        return role;
+
+    private boolean notIsFirstUser() {
+        return userReadRepository.count() != 0;
     }
 }

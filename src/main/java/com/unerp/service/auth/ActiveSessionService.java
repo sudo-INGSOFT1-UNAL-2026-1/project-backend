@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 public class ActiveSessionService {
 
 
-    private String activeToken;
+    private String activeToken = null;
 
     public boolean hasActiveSession() {
         return activeToken != null;
@@ -17,6 +17,9 @@ public class ActiveSessionService {
     }
 
     public String getActiveToken() {
+        if(!hasActiveSession()) {
+            throw new IllegalArgumentException("No hay una sesión activa.");
+        }
         return activeToken;
     }
 
