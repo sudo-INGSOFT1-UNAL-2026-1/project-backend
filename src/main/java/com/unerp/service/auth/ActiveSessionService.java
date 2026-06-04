@@ -18,7 +18,7 @@ public class ActiveSessionService {
 
     public String getActiveToken() {
         if(!hasActiveSession()) {
-            throw new IllegalArgumentException("No hay una sesión activa.");
+            throw new SecurityException("No hay una sesión activa.");
         }
         return activeToken;
     }

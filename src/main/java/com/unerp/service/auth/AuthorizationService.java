@@ -29,7 +29,7 @@ public class AuthorizationService {
         boolean hasPermission = rolePermissionReadRepository.existsByRole_IdAndPermission_name(roleId, permissionName);
 
         if (!hasPermission) {
-            throw new RuntimeException("No tienes permiso para realizar esta acción.");
+            throw new IllegalStateException("No tienes permiso para realizar esta acción.");
         }
     }
 }

@@ -88,9 +88,11 @@ public class User {
 
     public void activate() {
             this.state = this.state.activate();
+            this.stateString = this.state.getName();
     }
 
     public void deactivate() {
-        this.state.deactivate();
+        this.state = this.state.deactivate();
+        this.stateString = this.state.getName();
     }
 }

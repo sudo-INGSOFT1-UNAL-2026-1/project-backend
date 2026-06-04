@@ -51,11 +51,24 @@ public class UserGetAllController {
                     .status(HttpStatus.BAD_REQUEST)
                     .body(e.getMessage());
 
-        } catch (Exception e) {
+        } catch (IllegalStateException e) {
+
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(e.getMessage());
+
+        } catch (SecurityException e) {
+
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(e.getMessage());
+
+        }catch (Exception e) {
 
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(e.getMessage());
+
         }
     }
 
