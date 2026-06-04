@@ -1,40 +1,35 @@
 package com.unerp.controller.user;
 
+
 import com.unerp.domain.user.User;
-import com.unerp.service.user.UserCreateService;
+import com.unerp.service.user.UserActivateService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/user")
-public class UserCreateController {
+public class UserActivateController {
 
-    private final UserCreateService userCreateService;
+    private final UserActivateService userActivateService;
 
-    public UserCreateController(UserCreateService userCreateService) {
-        this.userCreateService = userCreateService;
+    public UserActivateController(UserActivateService userActivateService) {
+        this.userActivateService = userActivateService;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> createUser(
-
-            @RequestParam String name,
-            @RequestParam String email,
-            @RequestParam String password,
-            @RequestParam String roleName
-
+    @PutMapping("/activate")
+    public ResponseEntity<?> activateUser(
+            @RequestParam Integer userId
     ) {
         try {
-            User user = userCreateService.createUser(
-                    name,
-                    email,
-                    password,
-                    roleName
-            );
+            User user = userActivateService.activateUser(userId);
 
             Map<String, Object> responseBody = new HashMap<>();
             responseBody.put("id", user.getId());
@@ -44,16 +39,26 @@ public class UserCreateController {
             responseBody.put("role", user.getRole().getName());
 
             return ResponseEntity
-                    .status(HttpStatus.CREATED)
+                    .status(HttpStatus.OK)
                     .body(responseBody);
         } catch (IllegalArgumentException e) {
+
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(e.getMessage());
-        } catch (IllegalStateException e) {
+
+        } catch (IllegalStateException  e) {
+
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
                     .body(e.getMessage());
+
+        } catch (NoSuchElementException e) {
+
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(e.getMessage());
+
         } catch (SecurityException e) {
 
             return ResponseEntity
@@ -69,3 +74,4 @@ public class UserCreateController {
         }
     }
 }
+

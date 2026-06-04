@@ -1,6 +1,6 @@
 package com.unerp.domain.role;
 
-public class RoleName {
+public final class RoleName {
 
     public static final String ADMIN_EMPRESA =
             "ADMIN_EMPRESA";
