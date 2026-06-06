@@ -49,6 +49,15 @@ fi
 
 docker --version
 
+if ! docker info >/dev/null 2>&1; then
+    echo "ERROR: No se puede acceder al daemon de Docker."
+    echo "       Esto suele ocurrir por falta de permisos en /var/run/docker.sock."
+    echo "       Ejecuta el script con sudo o agrega tu usuario al grupo docker:" 
+    echo "         sudo usermod -aG docker \$USER"
+    echo "       Después cierra sesión y vuelve a iniciar sesión." 
+    exit 1
+fi
+
 echo ""
 
 # -----------------------------------------------------
@@ -57,7 +66,20 @@ echo ""
 
 echo "[4/8] Levantando contenedores Docker..."
 
-docker compose up -d
+# Source the .env file to ensure all variables are available
+source .env
+
+COMPOSE_CMD=""
+if docker compose version >/dev/null 2>&1; then
+    COMPOSE_CMD="docker compose"
+elif docker-compose version >/dev/null 2>&1; then
+    COMPOSE_CMD="docker-compose"
+else
+    echo "ERROR: No se encontró docker compose ni docker-compose."
+    exit 1
+fi
+
+${COMPOSE_CMD} up -d
 
 if [ $? -ne 0 ]; then
     echo "ERROR: No se pudieron iniciar los contenedores."
