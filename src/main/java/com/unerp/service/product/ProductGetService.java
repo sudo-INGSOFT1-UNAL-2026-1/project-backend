@@ -1,21 +1,23 @@
 package com.unerp.service.product;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.unerp.domain.product.Product;
 import com.unerp.domain.product.ProductBuilder;
 import com.unerp.repository.product.ProductReadRepository;
+import com.unerp.repository.product.ProductSpecifications;
 import com.unerp.repository.product.ProductWriteRepository;
 
 @Service
-public class ProductUpdateService {
+public class ProductGetService {
     
     private final ProductReadRepository productReadRepository;
     private final ProductWriteRepository productWriteRepository;
 
-    public ProductUpdateService(ProductReadRepository productReadRepository,
+    public ProductGetService(ProductReadRepository productReadRepository,
         ProductWriteRepository productWriteRepository) {
 
         this.productReadRepository = productReadRepository;
@@ -33,8 +35,7 @@ public class ProductUpdateService {
         Integer supplierId
         ) {
 
-        Product existingProduct = productReadRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Product doesn't exist"));
+        Product existingProduct = getProductById(id);
 
         String existingName = existingProduct.getName();
         String existingDescription = existingProduct.getDescription();
@@ -55,5 +56,34 @@ public class ProductUpdateService {
             .setSupplierId(supplierId != null ? supplierId : existingSupplierId)
             .build();
         return productWriteRepository.save(updatedProduct);
+    }
+
+    public List<Product> getAllProducts() {
+        return productReadRepository.findAll();
+    }
+
+    public Product getProductById(Integer id) {
+        return productReadRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Product doesn't exist"));
+    }
+
+    public List<Product> getProductsByParameters(
+            String name,
+            String description,
+            Integer stock,
+            Double price,
+            String batch,
+            LocalDate expirationDate,
+            Integer supplierId
+        ) {
+        
+            return productReadRepository.findAll(
+                ProductSpecifications.filterBy(
+                    name,
+                    description,
+                    stock,
+                    price,
+                    batch,
+                    expirationDate,
+                    supplierId));
     }
 }
