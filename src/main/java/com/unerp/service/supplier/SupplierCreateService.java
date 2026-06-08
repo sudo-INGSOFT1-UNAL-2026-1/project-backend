@@ -28,6 +28,7 @@ public class SupplierCreateService {
     ) {
 
         validateAvailableEmail(email);
+        validateEmailFormat(email);
 
         Supplier newSupplier = new SupplierBuilder()
             .setName(name)
@@ -41,6 +42,13 @@ public class SupplierCreateService {
     public void validateAvailableEmail(String email) {
         if (supplierReadRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("Email already exists");
+        }
+    }
+
+    public void validateEmailFormat(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        if (!email.matches(emailRegex)) {
+            throw new IllegalArgumentException("Invalid email format");
         }
     }
 }
