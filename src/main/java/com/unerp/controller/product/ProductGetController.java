@@ -127,33 +127,20 @@ public class ProductGetController {
 
     @GetMapping("/search")
     public ResponseEntity<?> getProductsByParameters(
-        @RequestParam String name,
-        @RequestParam String description,
-        @RequestParam Integer stock,
-        @RequestParam Double price,
-        @RequestParam String batch,
-        @RequestParam LocalDate expirationDate,
-        @RequestParam Integer supplierId) {
+        @RequestParam(required = false) String name,
+        @RequestParam(required = false) String description,
+        @RequestParam(required = false) Integer stock,
+        @RequestParam(required = false) Double price,
+        @RequestParam(required = false) String batch,
+        @RequestParam(required = false) LocalDate expirationDate,
+        @RequestParam(required = false) Integer supplierId) {
         try {
 
             List<Product> products = productGetService.getProductsByParameters(name, description, stock, price, batch, expirationDate, supplierId);
-            
-            Map<String, Object> responseBody = new HashMap<>();
-            
-            for (Product product : products) {
-                responseBody.put("id", product.getId());
-                responseBody.put("name", product.getName());
-                responseBody.put("description", product.getDescription());
-                responseBody.put("stock", product.getStock());
-                responseBody.put("price", product.getPrice());
-                responseBody.put("batch", product.getBatch());
-                responseBody.put("expirationDate", product.getExpirationDate());
-                responseBody.put("supplierId", product.getSupplierId());
-            }
 
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(responseBody);
+                    .body(products);
 
         } catch (IllegalArgumentException e) {
 
