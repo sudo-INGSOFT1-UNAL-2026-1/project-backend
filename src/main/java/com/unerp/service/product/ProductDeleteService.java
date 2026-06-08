@@ -1,12 +1,14 @@
 package com.unerp.service.product;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.unerp.repository.product.ProductReadRepository;
 import com.unerp.repository.product.ProductWriteRepository;
 import com.unerp.repository.supplier.SupplierReadRepository;
 
 @Service
+@Transactional
 public class ProductDeleteService {
     
     private final ProductReadRepository productReadRepository;

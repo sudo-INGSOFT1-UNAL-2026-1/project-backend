@@ -51,7 +51,7 @@ public class ProductDeleteController {
         }
     }
 
-    @DeleteMapping("/delete-by-supplier-id")
+    @DeleteMapping("/delete-by-supplier")
     public ResponseEntity<?> deleteProductBySupplierId(
         @RequestParam Integer supplierId
     ) {
