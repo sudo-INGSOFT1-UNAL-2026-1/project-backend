@@ -51,7 +51,7 @@ CREATE TABLE customer (
 CREATE TABLE supplier (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    phone VARCHAR(20) UNIQUE,
+    phone VARCHAR(20),
     email VARCHAR(100) NOT NULL UNIQUE
 ) ENGINE=InnoDB;
 

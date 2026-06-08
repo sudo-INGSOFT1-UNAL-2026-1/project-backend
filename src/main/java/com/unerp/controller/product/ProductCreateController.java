@@ -7,8 +7,8 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unerp.domain.product.Product;
@@ -26,14 +26,13 @@ public class ProductCreateController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createProduct(
-        
-            @RequestBody String name,
-            @RequestBody String description,
-            @RequestBody Integer stock,
-            @RequestBody Double price,
-            @RequestBody String batch,
-            @RequestBody LocalDate expirationDate,
-            @RequestBody Integer supplier_id
+        @RequestParam String name,
+        @RequestParam String description,
+        @RequestParam Integer stock,
+        @RequestParam Double price,
+        @RequestParam String batch,
+        @RequestParam LocalDate expirationDate,
+        @RequestParam Integer supplierId
     ) {
         try { 
 
@@ -44,7 +43,7 @@ public class ProductCreateController {
             price,
             batch,
             expirationDate,
-            supplier_id
+            supplierId
         );
 
         Map<String, Object> responseBody = new HashMap<>();
@@ -55,7 +54,7 @@ public class ProductCreateController {
         responseBody.put("price", product.getPrice());
         responseBody.put("batch", product.getBatch());
         responseBody.put("expirationDate", product.getExpirationDate());
-        responseBody.put("supplier_id", product.getSupplier_id());
+        responseBody.put("supplierId", product.getSupplierId());
 
         return ResponseEntity
             .status(HttpStatus.CREATED)

@@ -7,7 +7,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -30,9 +29,8 @@ public class Product {
 
     private LocalDate expirationDate;
 
-    @ManyToOne
     @JoinColumn(name = "supplier_id")
-    private Integer supplier_id;
+    private Integer supplierId;
 
     public Product(
             Integer id,
@@ -42,7 +40,7 @@ public class Product {
             Double price,
             String batch,
             LocalDate expirationDate,
-            Integer supplier_id
+            Integer supplierId
     ) {
         this.id = id;
         this.name = name;
@@ -51,7 +49,7 @@ public class Product {
         this.price = price;
         this.batch = batch;
         this.expirationDate = expirationDate;
-        this.supplier_id = supplier_id;
+        this.supplierId = supplierId;
     }
 
     public Product() {
@@ -85,8 +83,8 @@ public class Product {
         return expirationDate;
     }
 
-    public Integer getSupplier_id() {
-        return supplier_id;
+    public Integer getSupplierId() {
+        return supplierId;
     }
 
 }
