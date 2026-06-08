@@ -6,8 +6,8 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unerp.domain.supplier.Supplier;
@@ -25,10 +25,9 @@ public class SupplierCreateController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createSupplier(
-        
-            @RequestBody String name,
-            @RequestBody Integer phone,
-            @RequestBody String email
+        @RequestParam String name,
+        @RequestParam String phone,
+        @RequestParam String email
     ) {
         try { 
 

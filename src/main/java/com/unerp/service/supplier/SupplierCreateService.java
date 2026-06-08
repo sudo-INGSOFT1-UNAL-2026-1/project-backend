@@ -23,7 +23,7 @@ public class SupplierCreateService {
 
     public Supplier createSupplier(
         String name,
-        Integer phone,
+        String phone,
         String email
     ) {
 

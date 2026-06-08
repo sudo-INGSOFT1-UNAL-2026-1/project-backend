@@ -19,14 +19,14 @@ public class Supplier {
     private String name;
 
     @Nullable
-    private Integer phone;
+    private String phone;
 
     @Column(unique = true)
     private String email;
 
     public Supplier(Integer id,
         String name,
-        @Nullable Integer phone,
+        @Nullable String phone,
         String email) {
         this.id = id;
         this.name = name;
@@ -45,7 +45,7 @@ public class Supplier {
         return name;
     }
 
-    public Integer getPhone() {
+    public String getPhone() {
         return phone;
     }
 

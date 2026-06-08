@@ -4,7 +4,7 @@ public class SupplierBuilder {
     
     private Integer id;
     private String name;
-    private Integer phone;
+    private String phone;
     private String email;
 
     public SupplierBuilder setId(Integer id) {
@@ -17,7 +17,7 @@ public class SupplierBuilder {
         return this;
     }
 
-    public SupplierBuilder setPhone(Integer phone) {
+    public SupplierBuilder setPhone(String phone) {
         this.phone = phone;
         return this;
     }
