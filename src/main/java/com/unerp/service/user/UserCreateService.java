@@ -43,6 +43,9 @@ public class UserCreateService {
             String password,
             String roleName
     ) {
+        validateEmail(email);
+        validateName(name);
+
         validateAvailableEmail(email);
 
         Role role;
@@ -85,4 +88,22 @@ public class UserCreateService {
     private boolean notIsFirstUser() {
         return userReadRepository.count() != 0;
     }
+
+    private void validateName(String name) {
+
+        String regex = "^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ ]{2,50}$";
+
+        if (!name.matches(regex)) {
+            throw new IllegalArgumentException("El nombre debe contener solo letras y espacios, y tener entre 2 y 50 caracteres.");
+        }
+    }
+
+    private void validateEmail(String email) {
+        String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+
+        if (!email.matches(regex)) {
+            throw new IllegalArgumentException("El email no tiene un formato válido.");
+        }
+    }
+
 }
