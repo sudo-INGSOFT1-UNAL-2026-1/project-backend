@@ -95,4 +95,8 @@ public class User {
         this.state = this.state.deactivate();
         this.stateString = this.state.getName();
     }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }
