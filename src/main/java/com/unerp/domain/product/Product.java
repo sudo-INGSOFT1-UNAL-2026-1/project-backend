@@ -1,90 +1,52 @@
 package com.unerp.domain.product;
 
-import java.time.LocalDate;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "product")
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String name;
-
     private String description;
-
     private Integer stock;
-    
-    private Double price;
-
+    private BigDecimal price;
     private String batch;
 
+    @Column(name = "expiration_date")
     private LocalDate expirationDate;
 
-    @JoinColumn(name = "supplier_id")
+    @Column(name = "supplier_id")
     private Integer supplierId;
 
-    public Product(
-            Integer id,
-            String name,
-            String description,
-            Integer stock,
-            Double price,
-            String batch,
-            LocalDate expirationDate,
-            Integer supplierId
-    ) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.stock = stock;
-        this.price = price;
-        this.batch = batch;
-        this.expirationDate = expirationDate;
-        this.supplierId = supplierId;
-    }
+    public Product() {}
 
-    public Product() {
-    }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
-    public Integer getId() {
-        return id;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public String getDescription() {
-        return description;
-    }
+    public Integer getStock() { return stock; }
+    public void setStock(Integer stock) { this.stock = stock; }
 
-    public Integer getStock() {
-        return stock;
-    }
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
 
-    public Double getPrice() {
-        return price;
-    }
+    public String getBatch() { return batch; }
+    public void setBatch(String batch) { this.batch = batch; }
 
-    public String getBatch() {
-        return batch;
-    }
+    public LocalDate getExpirationDate() { return expirationDate; }
+    public void setExpirationDate(LocalDate expirationDate) { this.expirationDate = expirationDate; }
 
-    public LocalDate getExpirationDate() {
-        return expirationDate;
-    }
-
-    public Integer getSupplierId() {
-        return supplierId;
-    }
-
+    public Integer getSupplierId() { return supplierId; }
+    public void setSupplierId(Integer supplierId) { this.supplierId = supplierId; }
 }
