@@ -11,20 +11,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class AuthLogoutController {
 
-    private final ActiveSessionService activeSessionService;
+  private final ActiveSessionService activeSessionService;
 
-    public AuthLogoutController(ActiveSessionService activeSessionService) {
-        this.activeSessionService = activeSessionService;
-    }
+  public AuthLogoutController(ActiveSessionService activeSessionService) {
+    this.activeSessionService = activeSessionService;
+  }
 
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout() {
+  @PostMapping("/logout")
+  public ResponseEntity<?> logout() {
 
-        activeSessionService.clearSession();
+    activeSessionService.clearSession();
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body("Logout Exitoso");
-
-    }
+    return ResponseEntity.status(HttpStatus.OK).body("Logout Exitoso");
+  }
 }

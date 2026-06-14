@@ -1,6 +1,5 @@
 package com.unerp.controller.auth;
 
-
 import com.unerp.dto.auth.InitializationResponse;
 import com.unerp.service.auth.FirstUserService;
 import org.springframework.http.HttpStatus;
@@ -13,17 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class InitializationController {
 
-    private final FirstUserService firstUserService;
+  private final FirstUserService firstUserService;
 
-    public InitializationController(FirstUserService firstUserService) {
-        this.firstUserService = firstUserService;
-    }
+  public InitializationController(FirstUserService firstUserService) {
+    this.firstUserService = firstUserService;
+  }
 
-    @GetMapping("/is-initialized")
-    public ResponseEntity<?> checkInitializationStatus(){
+  @GetMapping("/is-initialized")
+  public ResponseEntity<?> checkInitializationStatus() {
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new InitializationResponse(!firstUserService.isFirstUser()));
-    }
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(new InitializationResponse(!firstUserService.isFirstUser()));
+  }
 }

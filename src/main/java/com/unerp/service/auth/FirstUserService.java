@@ -6,14 +6,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class FirstUserService {
 
-    private final UserReadRepository userReadRepository;
+  private final UserReadRepository userReadRepository;
 
-    public FirstUserService(UserReadRepository userReadRepository) {
-        this.userReadRepository = userReadRepository;
-    }
+  public FirstUserService(UserReadRepository userReadRepository) {
+    this.userReadRepository = userReadRepository;
+  }
 
-    public boolean isFirstUser() {
-        return userReadRepository.count() == 0;
-    }
-
+  public boolean isFirstUser() {
+    return userReadRepository.count() == 0;
+  }
 }
