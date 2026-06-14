@@ -6,6 +6,7 @@ import com.unerp.domain.user.User;
 import com.unerp.repository.user.*;
 import com.unerp.security.PasswordHasher;
 import com.unerp.service.auth.AuthorizationService;
+import com.unerp.service.auth.FirstUserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -33,6 +34,9 @@ public class UserCreateServiceTest {
     @Mock
     private AuthorizationService authorizationService;
 
+    @Mock
+    private FirstUserService firstUserService;
+
     @InjectMocks
     private UserCreateService userCreateService;
 
@@ -54,7 +58,7 @@ public class UserCreateServiceTest {
 
         Role adminRole = new Role(1, RoleName.ADMIN_EMPRESA);
 
-        when(userReadRepository.count()).thenReturn(0L);
+        when(firstUserService.isFirstUser()).thenReturn(true);
         when(userReadRepository.existsByEmail("angel@gmail")).thenReturn(false);
         when(roleReadRepository.findByName(RoleName.ADMIN_EMPRESA)).thenReturn(adminRole);
         when(passwordHasher.hash("password123")).thenReturn("hashedPassword");

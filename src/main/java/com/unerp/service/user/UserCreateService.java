@@ -11,6 +11,7 @@ import com.unerp.repository.user.RoleReadRepository;
 import com.unerp.repository.user.UserWriteRepository;
 import com.unerp.repository.user.UserReadRepository;
 import com.unerp.service.auth.AuthorizationService;
+import com.unerp.service.auth.FirstUserService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,19 +22,22 @@ public class UserCreateService {
     private final RoleReadRepository roleReadRepository;
     private final PasswordHasher passwordHasher;
     private final AuthorizationService authorizationService;
+    private final FirstUserService firstUserService;
 
     public UserCreateService(
             UserReadRepository userReadRepository,
             UserWriteRepository userWriteRepository,
             RoleReadRepository roleReadRepository,
             PasswordHasher passwordHasher,
-            AuthorizationService authorizationService
+            AuthorizationService authorizationService,
+            FirstUserService firstUserService
     ) {
         this.userReadRepository = userReadRepository;
         this.userWriteRepository = userWriteRepository;
         this.passwordHasher = passwordHasher;
         this.roleReadRepository = roleReadRepository;
         this.authorizationService = authorizationService;
+        this.firstUserService = firstUserService;
 
     }
 
@@ -50,11 +54,11 @@ public class UserCreateService {
 
         Role role;
 
-        if (notIsFirstUser()) {
+        if (firstUserService.isFirstUser()) {
+            role = getRole(RoleName.ADMIN_EMPRESA);
+        } else {
             authorizationService.validatePermission(PermissionName.GESTION_ROLES);
             role = getRole(roleName);
-        } else {
-            role = getRole(RoleName.ADMIN_EMPRESA);
         }
 
         String passwordHash = passwordHasher.hash(password);
@@ -85,9 +89,6 @@ public class UserCreateService {
         return role;
     }
 
-    private boolean notIsFirstUser() {
-        return userReadRepository.count() != 0;
-    }
 
     private void validateName(String name) {
 
