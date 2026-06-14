@@ -40,7 +40,7 @@ public class ProductGetService {
         String existingName = existingProduct.getName();
         String existingDescription = existingProduct.getDescription();
         Integer existingStock = existingProduct.getStock();
-        Double existingPrice = existingProduct.getPrice();
+        Double existingPrice = existingProduct.getPrice().doubleValue();
         String existingBatch = existingProduct.getBatch();
         LocalDate existingExpirationDate = existingProduct.getExpirationDate();
         Integer existingSupplierId = existingProduct.getSupplierId();

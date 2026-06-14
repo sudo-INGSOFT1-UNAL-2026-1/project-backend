@@ -55,6 +55,8 @@ public class ProductBuilder {
     }
 
     public Product build() {
-        return new Product(id, name, description, stock, price, batch, expirationDate, supplierId);
+        return new Product(id, name, description, stock, 
+            price != null ? java.math.BigDecimal.valueOf(price) : null,  // convert here
+            batch, expirationDate, supplierId);
     }
 }
