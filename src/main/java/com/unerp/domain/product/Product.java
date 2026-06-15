@@ -1,90 +1,86 @@
 package com.unerp.domain.product;
 
-import java.time.LocalDate;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "product")
 public class Product {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    private String name;
+  private String name;
 
-    private String description;
+  private String description;
 
-    private Integer stock;
-    
-    private Double price;
+  private Integer stock;
 
-    private String batch;
+  private Double price;
 
-    private LocalDate expirationDate;
+  private String batch;
 
-    @JoinColumn(name = "supplier_id")
-    private Integer supplierId;
+  private LocalDate expirationDate;
 
-    public Product(
-            Integer id,
-            String name,
-            String description,
-            Integer stock,
-            Double price,
-            String batch,
-            LocalDate expirationDate,
-            Integer supplierId
-    ) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.stock = stock;
-        this.price = price;
-        this.batch = batch;
-        this.expirationDate = expirationDate;
-        this.supplierId = supplierId;
-    }
+  @JoinColumn(name = "supplier_id")
+  private Integer supplierId;
 
-    public Product() {
-    }
+  public Product(
+      Integer id,
+      String name,
+      String description,
+      Integer stock,
+      Double price,
+      String batch,
+      LocalDate expirationDate,
+      Integer supplierId) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.stock = stock;
+    this.price = price;
+    this.batch = batch;
+    this.expirationDate = expirationDate;
+    this.supplierId = supplierId;
+  }
 
-    public Integer getId() {
-        return id;
-    }
+  public Product() {}
 
-    public String getName() {
-        return name;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public Integer getStock() {
-        return stock;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public Double getPrice() {
-        return price;
-    }
+  public Integer getStock() {
+    return stock;
+  }
 
-    public String getBatch() {
-        return batch;
-    }
+  public Double getPrice() {
+    return price;
+  }
 
-    public LocalDate getExpirationDate() {
-        return expirationDate;
-    }
+  public String getBatch() {
+    return batch;
+  }
 
-    public Integer getSupplierId() {
-        return supplierId;
-    }
+  public LocalDate getExpirationDate() {
+    return expirationDate;
+  }
 
+  public Integer getSupplierId() {
+    return supplierId;
+  }
 }

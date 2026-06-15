@@ -1,33 +1,33 @@
 package com.unerp.domain.supplier;
 
 public class SupplierBuilder {
-    
-    private Integer id;
-    private String name;
-    private String phone;
-    private String email;
 
-    public SupplierBuilder setId(Integer id) {
-        this.id = id;
-        return this;
-    }
+  private Integer id;
+  private String name;
+  private String phone;
+  private String email;
 
-    public SupplierBuilder setName(String name) {
-        this.name = name;
-        return this;
-    }
+  public SupplierBuilder setId(Integer id) {
+    this.id = id;
+    return this;
+  }
 
-    public SupplierBuilder setPhone(String phone) {
-        this.phone = phone;
-        return this;
-    }
+  public SupplierBuilder setName(String name) {
+    this.name = name;
+    return this;
+  }
 
-    public SupplierBuilder setEmail(String email) {
-        this.email = email;
-        return this;
-    }
+  public SupplierBuilder setPhone(String phone) {
+    this.phone = phone;
+    return this;
+  }
 
-    public Supplier build() {
-        return new Supplier(id, name, phone, email);
-    }
+  public SupplierBuilder setEmail(String email) {
+    this.email = email;
+    return this;
+  }
+
+  public Supplier build() {
+    return new Supplier(id, name, phone, email);
+  }
 }
