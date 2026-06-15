@@ -1,50 +1,57 @@
 package com.unerp.service.product;
 
-import java.time.LocalDate;
-
-import org.springframework.stereotype.Service;
-
+import com.unerp.domain.permission.PermissionName;
 import com.unerp.domain.product.Product;
 import com.unerp.domain.product.ProductBuilder;
 import com.unerp.repository.product.ProductReadRepository;
 import com.unerp.repository.product.ProductWriteRepository;
+import com.unerp.service.auth.AuthorizationService;
+import java.time.LocalDate;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ProductUpdateService {
-    
-    private final ProductReadRepository productReadRepository;
-    private final ProductWriteRepository productWriteRepository;
 
-    public ProductUpdateService(ProductReadRepository productReadRepository,
-        ProductWriteRepository productWriteRepository) {
+  private final ProductReadRepository productReadRepository;
+  private final ProductWriteRepository productWriteRepository;
+  private final AuthorizationService authorizationService;
 
-        this.productReadRepository = productReadRepository;
-        this.productWriteRepository = productWriteRepository;
-    }
+  public ProductUpdateService(
+      ProductReadRepository productReadRepository,
+      ProductWriteRepository productWriteRepository,
+      AuthorizationService authorizationService
+  ) {
+    this.productReadRepository = productReadRepository;
+    this.productWriteRepository = productWriteRepository;
+    this.authorizationService = authorizationService;
+  }
 
-    public Product updateProduct(
-        Integer id,
-        String name,
-        String description,
-        Integer stock,
-        Double price,
-        String batch,
-        LocalDate expirationDate,
-        Integer supplierId
-        ) {
+  public Product updateProduct(
+      Integer id,
+      String name,
+      String description,
+      Integer stock,
+      Double price,
+      String batch,
+      LocalDate expirationDate,
+      Integer supplierId) {
 
-        Product existingProduct = productReadRepository.findById(id)
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
+    Product existingProduct =
+        productReadRepository
+            .findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Product doesn't exist"));
 
-        String existingName = existingProduct.getName();
-        String existingDescription = existingProduct.getDescription();
-        Integer existingStock = existingProduct.getStock();
-        Double existingPrice = existingProduct.getPrice();
-        String existingBatch = existingProduct.getBatch();
-        LocalDate existingExpirationDate = existingProduct.getExpirationDate();
-        Integer existingSupplierId = existingProduct.getSupplierId();
+    String existingName = existingProduct.getName();
+    String existingDescription = existingProduct.getDescription();
+    Integer existingStock = existingProduct.getStock();
+    Double existingPrice = existingProduct.getPrice();
+    String existingBatch = existingProduct.getBatch();
+    LocalDate existingExpirationDate = existingProduct.getExpirationDate();
+    Integer existingSupplierId = existingProduct.getSupplierId();
 
-        Product updatedProduct = new ProductBuilder()
+    Product updatedProduct =
+        new ProductBuilder()
             .setId(id)
             .setName(name != null ? name : existingName)
             .setDescription(description != null ? description : existingDescription)
@@ -54,6 +61,6 @@ public class ProductUpdateService {
             .setExpirationDate(expirationDate != null ? expirationDate : existingExpirationDate)
             .setSupplierId(supplierId != null ? supplierId : existingSupplierId)
             .build();
-        return productWriteRepository.save(updatedProduct);
-    }
+    return productWriteRepository.save(updatedProduct);
+  }
 }
