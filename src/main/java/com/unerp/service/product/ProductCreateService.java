@@ -1,10 +1,12 @@
 package com.unerp.service.product;
 
+import com.unerp.domain.permission.PermissionName;
 import com.unerp.domain.product.Product;
 import com.unerp.domain.product.ProductBuilder;
 import com.unerp.repository.product.ProductReadRepository;
 import com.unerp.repository.product.ProductWriteRepository;
 import com.unerp.repository.supplier.SupplierReadRepository;
+import com.unerp.service.auth.AuthorizationService;
 import java.time.LocalDate;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +16,18 @@ public class ProductCreateService {
   private final ProductReadRepository productReadRepository;
   private final SupplierReadRepository supplierReadRepository;
   private final ProductWriteRepository productWriteRepository;
+  private final AuthorizationService authorizationService;
 
   public ProductCreateService(
       ProductReadRepository productReadRepository,
       SupplierReadRepository supplierReadRepository,
-      ProductWriteRepository productWriteRepository) {
+      ProductWriteRepository productWriteRepository,
+      AuthorizationService authorizationService) {
 
     this.productReadRepository = productReadRepository;
     this.supplierReadRepository = supplierReadRepository;
     this.productWriteRepository = productWriteRepository;
+    this.authorizationService = authorizationService;
   }
 
   public Product createProduct(
@@ -34,6 +39,7 @@ public class ProductCreateService {
       LocalDate expirationDate,
       Integer supplierId) {
 
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
     validateProductExists(name, batch);
     validateSupplierExists(supplierId);
 

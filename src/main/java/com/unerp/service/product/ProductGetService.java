@@ -1,10 +1,12 @@
 package com.unerp.service.product;
 
+import com.unerp.domain.permission.PermissionName;
 import com.unerp.domain.product.Product;
 import com.unerp.domain.product.ProductBuilder;
 import com.unerp.repository.product.ProductReadRepository;
 import com.unerp.repository.product.ProductSpecifications;
 import com.unerp.repository.product.ProductWriteRepository;
+import com.unerp.service.auth.AuthorizationService;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -14,12 +16,16 @@ public class ProductGetService {
 
   private final ProductReadRepository productReadRepository;
   private final ProductWriteRepository productWriteRepository;
+  private final AuthorizationService authorizationService;
 
   public ProductGetService(
-      ProductReadRepository productReadRepository, ProductWriteRepository productWriteRepository) {
+      ProductReadRepository productReadRepository,
+      ProductWriteRepository productWriteRepository,
+      AuthorizationService authorizationService) {
 
     this.productReadRepository = productReadRepository;
     this.productWriteRepository = productWriteRepository;
+    this.authorizationService = authorizationService;
   }
 
   public Product updateProduct(
@@ -31,6 +37,8 @@ public class ProductGetService {
       String batch,
       LocalDate expirationDate,
       Integer supplierId) {
+
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
 
     Product existingProduct = getProductById(id);
 
@@ -57,10 +65,12 @@ public class ProductGetService {
   }
 
   public List<Product> getAllProducts() {
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
     return productReadRepository.findAll();
   }
 
   public Product getProductById(Integer id) {
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
     return productReadRepository
         .findById(id)
         .orElseThrow(() -> new IllegalArgumentException("Product doesn't exist"));

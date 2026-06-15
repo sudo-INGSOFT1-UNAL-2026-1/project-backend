@@ -40,7 +40,6 @@ public class SupplierCreateController {
     } catch (IllegalStateException e) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     } catch (SecurityException e) {
-
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
   }

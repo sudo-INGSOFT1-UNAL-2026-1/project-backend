@@ -45,6 +45,8 @@ public class ProductDeleteController {
       return ResponseEntity.status(HttpStatus.OK).body("Product deleted successfully");
     } catch (IllegalArgumentException e) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    } catch (SecurityException e) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
   }
 }

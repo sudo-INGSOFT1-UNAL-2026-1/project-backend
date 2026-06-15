@@ -20,7 +20,7 @@ public class Permission {
 
   protected Permission() {}
 
-  public Permission(Integer id, String name) {
+  public Permission(String name) {
     this.name = name;
   }
 
