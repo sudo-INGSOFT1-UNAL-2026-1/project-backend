@@ -1,73 +1,81 @@
 ---
 name: java-springboot
-description: 'Get best practices for developing applications with Spring Boot.'
+description: 'Get best practices and architectural compliance rules for developing and reviewing applications with Spring Boot.'
 ---
 
-# Spring Boot Best Practices
+# Spring Boot Best Practices & Agent Rules
 
-Your goal is to help me write high-quality Spring Boot applications by following established best practices.
+Your goal is to help me write high-quality Spring Boot applications by following established clean code practices, enforcing our architectural boundaries, and auditing code using a standardized review template.
 
-## Project Setup & Structure
+## 1. Clean Code
 
-- **Build Tool:** Use Maven (`pom.xml`) for dependency management.
-- **Starters:** Use Spring Boot starters (e.g., `spring-boot-starter-web`, `spring-boot-starter-data-jpa`) to simplify dependency management.
-- **Package Structure:** Organize code by layer and feature/domain (e.g., `com.example.app.controller.order`, `com.example.app.user`).
+- **Dependency Injection:** Always use constructor-based injection for required dependencies. Declare fields as `private final` to enforce immutability.
+- **Component Stereotypes:** Use `@Component`, `@Service`, `@Repository`, and `@Controller`/`@RestController` appropriately to define beans.
+- **Naming Conventions:** Use CamelCase for classes, camelCase for methods/variables, UPPER_CASE for constants, and lowercase for package names.
+- **Documentation:** Every public interface, public service method, and controller endpoint must have proper JavaDoc explaining its purpose, parameters, and return types.
+- **Logging (SLF4J):** Declare loggers as `private static final Logger logger = LoggerFactory.getLogger(MyClass.class);`. Use parameterized messages (`logger.info("Processing user {}...", userId);`) instead of string concatenation to preserve memory.
+- **Error Handling:** Centralize exceptions globally using a `@ControllerAdvice` combined with `@ExceptionHandler` methods to guarantee a consistent response payload structure.
 
-## Dependency Injection & Components
+## 2. Definition and Application for Arquitecture and Dependencies
 
-- **Constructor Injection:** Always use constructor-based injection for required dependencies. This makes components easier to test and dependencies explicit.
-- **Immutability:** Declare dependency fields as `private final`.
-- **Component Stereotypes:** Use `@Component`, `@Service`, `@Repository`, and `@Controller`/`@RestController` annotations appropriately to define beans.
+The project follows a **High-Level Layer** organization and, internally, it is subdivided by **Domains/Modules**.
 
-## Configuration
+### Base Package Structure:
+`com.unerp.[layer].[domain]`
 
-- **Externalized Configuration:** Use `application.yml` (or `application.properties`) for configuration. YAML is often preferred for its readability and hierarchical structure.
-
-## Web Layer (Controllers)
-
-- **RESTful APIs:** Design clear and consistent RESTful endpoints.
-- **Request Payloads (DTOs):** Handlers for POST/PUT requests must use specific request classes (e.g., `ProductRequest`, `CreateBillCommand`) inside `@RequestBody`. Do not use Domain Entities directly as input parameters in controllers.
-- **Entity Creation:** The controller (or a mapper) is responsible for taking the incoming request parameters and instantiating/building the corresponding Domain Entity before passing it to the service layer.
-- **Validation:** Apply Java Bean Validation annotations (`@Valid`, `@NotNull`, `@NotBlank`, etc.) on these request payload classes to validate incoming data.
-- **Error Handling:** Implement a global exception handler using `@ControllerAdvice` and `@ExceptionHandler` to provide consistent error responses.
-
-## Service Layer
-
-- **Business Logic:** Encapsulate all business logic within `@Service` classes.
-- **Statelessness:** Services should be stateless.
-- **Transaction Management:** Use `@Transactional` on service methods to manage database transactions declaratively. Apply it at the most granular level necessary.
-
-## Data Layer (Repositories)
-
-- **Spring Data JPA:** Use Spring Data JPA repositories by extending `JpaRepository` for standard database operations.
-- **Custom Queries:** For complex queries, use `@Query` or the JPA Criteria API.
-- **Projections:** Use DTO projections to fetch only the necessary data from the database.
-
-## Logging
-
-- **SLF4J:** Use the SLF4J API for logging.
-- **Logger Declaration:** `private static final Logger logger = LoggerFactory.getLogger(MyClass.class);`
-- **Parameterized Logging:** Use parameterized messages (`logger.info("Processing user {}...", userId);`) instead of string concatenation to improve performance.
-
-## Testing
-
-- **Unit Tests:** Write unit tests for services and components using JUnit 5 and a mocking framework like Mockito.
-- **Integration Tests:** Use `@SpringBootTest` for integration tests that load the Spring application context.
-- **Test slices:** Use test slice annotations like `@WebMvcTest` (for controllers) or `@DataJpaTest` (for repositories) to test specific parts of the application in isolation.
-- **Testcontainers:** Consider using Testcontainers for reliable integration tests with real databases, message brokers, etc.
-
-## Security
-
-- **Spring Security:** The project uses basic Spring Security for authentication/authorization. There are no roles, profiles, nor `@PreAuthorize` annotations on methods; security is handled globally.
-- **Password Encoding:** Always encode passwords using a strong hashing algorithm like BCrypt.
-- **Input Sanitization:** Prevent SQL injection by using Spring Data JPA or parameterized queries. Prevent Cross-Site Scripting (XSS) by properly encoding output.
-
-## Architecture Rules
-
-- **Project Structure:** The project follows a **High-Level Layer** organization and, internally, it is subdivided by **Domains/Modules**.
-- **Base Package Structure:** `com.unerp.[layer].[domain]`. Example for the 'product' domain:
+### Example for layer structure (Domain: `product`):
   - `com.unerp.domain.product`: JPA Entities and product aggregates.
   - `com.unerp.repository.product`: Spring Data Repository interface for products.
   - `com.unerp.service.product`: Business logic and services for product.
   - `com.unerp.controller.product`: REST Controllers, Endpoints, and Request/DTO payload classes for products.
-- **Strict rules to create functions:** To implement a new feature/function (e.g., 'bills'), replicate this exact package structure (`com.unerp.service.bills`, `com.unerp.controller.bills`, etc.). Do not mix domains in the same package.
+
+### Dependency and Coupling Rules (Allowed Flow):
+1. **Call flow:** `controller` -> `service` -> `repository` -> `domain`. 
+2. **Cross-Import Prohibition:** No class belonging to a domain should directly import components from another domain across different layers where it does not correspond (e.g., `com.unerp.controller.bills` cannot use `com.unerp.repository.product`). All inter-domain communication must be carried out strictly through the authorized service layer.
+3. **Data Input Handling (Payloads):** POST/PUT methods must use specific request classes (`ProductRequest`, `CreateBillCommand`) in the `@RequestBody`. The controller or a mapper will be responsible for instantiating the domain entity from this payload before invoking the service. Validation annotations (`@Valid`, `@NotNull`, `@NotBlank`) are located within these request classes.
+
+## 3. Severity Levels for code revision
+
+For proyect code analysis, suggestions audits, the findings have to be categorized on these three strict levels:
+
+- **MUST FIX (Blocking):**
+  - Architectural violations such as cross-layer/cross-domain forbidden imports.
+  - Business logic or persistence queries directly written inside controllers.
+  - Absence of secure encoding in URL parameters (`encodeURIComponent` or equivalent sanitization).
+  - Omission of required contexts or hardcoded configuration strings/secrets in the code.
+  - Lack of basic exception handling or breakdown in the execution chain of security middlewares/filters.
+- **SHOULD FIX (Non-blocking):**
+  - Inline type declarations (inline types or raw data) instead of using structured classes or domain models.
+  - Lack of sanitization/security validations (`.secure()`) on strings that have already been superficially validated.
+  - Response structure or formatting inconsistent with the global REST design of the project.
+  - Missing logger entries in alternative or error flows.
+  - Indiscriminate use of ambiguous generic types (such as `Object` or untyped responses) beyond generic exception handling.
+- **SUGGESTION:**
+  - Optional improvements for code readability.
+  - Minor refactoring opportunities.
+  - Consistency in local variable naming.
+  - Unit test coverage gaps for non-priority critical routes.
+
+## 4. Output Format: Report Review
+
+When requested to perform a code review or audit, analyze the code according to the principles above and return **only** the structured report below — no preamble, no narration.
+
+```markdown
+## Backend Review Report
+- **Scope:** [PR #X / local changes / full audit]
+- **Files reviewed:** [count and list grouped by layer]
+
+- **Architecture compliance:**
+| # | File:Line | Violation | Severity | Details |
+|---|-----------|-----------|----------|---------|
+| 1 | ...       | ...       | MUST FIX | ...     |
+
+- **Code quality findings:**
+| # | File:Line | Finding | Severity | Details |
+|---|-----------|---------|----------|---------|
+| 1 | ...       | ...     | SHOULD FIX | ...   |
+
+- **Security findings:**
+| # | File:Line | Issue | Severity | Details |
+|---|-----------|-------|----------|---------|
+| 1 | ...       | ...   | ...      | ...     |
