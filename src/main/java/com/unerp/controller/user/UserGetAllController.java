@@ -1,6 +1,8 @@
 package com.unerp.controller.user;
 
 import com.unerp.domain.user.User;
+import com.unerp.dto.user.UserMapper;
+import com.unerp.dto.user.UserResponse;
 import com.unerp.service.user.UserGetAllService;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,19 +30,13 @@ public class UserGetAllController {
 
       List<User> users = userGetAllService.getAllUsers();
 
-      List<Map<String, Object>> responseBody = new ArrayList<>();
+      List<UserResponse> response = new ArrayList<>();
 
       for (User user : users) {
-        Map<String, Object> userData = new HashMap<>();
-        userData.put("id", user.getId());
-        userData.put("name", user.getName());
-        userData.put("email", user.getEmail());
-        userData.put("State", user.getState().getName());
-        userData.put("Role", user.getRole().getName());
-        responseBody.add(userData);
+        response.add(UserMapper.toResponse(user));
       }
 
-      return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+      return ResponseEntity.status(HttpStatus.OK).body(response);
 
     } catch (IllegalArgumentException e) {
 

@@ -1,14 +1,19 @@
 package com.unerp.controller.auth;
 
 import com.unerp.domain.user.User;
+import com.unerp.dto.auth.LoginMapper;
+import com.unerp.dto.auth.LoginRequest;
+import com.unerp.dto.auth.LoginResponse;
 import com.unerp.service.auth.ActiveSessionService;
 import com.unerp.service.auth.AuthLoginService;
 import com.unerp.service.auth.JwtService;
+import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,26 +36,18 @@ public class AuthLoginController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) {
+  public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
     try {
 
       activeSessionService.validateNoActiveSession();
 
-      User user = authLoginService.login(email, password);
+      User user = authLoginService.login(request.email(), request.password());
 
       String token = jwtService.generateToken(user);
 
       activeSessionService.setActiveToken(token);
 
-      Map<String, Object> responseBody = new HashMap<>();
-      responseBody.put("token", token);
-      responseBody.put("id", user.getId());
-      responseBody.put("name", user.getName());
-      responseBody.put("email", user.getEmail());
-      responseBody.put("state", user.getState().getName());
-      responseBody.put("role", user.getRole().getName());
-
-      return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+      return ResponseEntity.status(HttpStatus.OK).body(LoginMapper.toResponse(token, user));
     } catch (IllegalArgumentException e) {
 
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

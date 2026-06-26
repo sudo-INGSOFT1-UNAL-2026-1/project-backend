@@ -1,6 +1,9 @@
 package com.unerp.controller.product;
 
 import com.unerp.domain.product.Product;
+import com.unerp.dto.product.ProductMapper;
+import com.unerp.dto.product.ProductResponse;
+import com.unerp.dto.product.ProductSearchRequest;
 import com.unerp.service.product.ProductGetService;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,6 +13,7 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,19 +34,10 @@ public class ProductGetController {
 
       List<Product> products = productGetService.getAllProducts();
 
-      List<Map<String, Object>> responseBody = new ArrayList<>();
+      List<ProductResponse> responseBody = new ArrayList<>();
 
       for (Product product : products) {
-        Map<String, Object> productData = new HashMap<>();
-        productData.put("id", product.getId());
-        productData.put("name", product.getName());
-        productData.put("description", product.getDescription());
-        productData.put("stock", product.getStock());
-        productData.put("price", product.getPrice());
-        productData.put("batch", product.getBatch());
-        productData.put("expirationDate", product.getExpirationDate());
-        productData.put("supplierId", product.getSupplierId());
-        responseBody.add(productData);
+        responseBody.add(ProductMapper.toResponse(product));
       }
 
       return ResponseEntity.status(HttpStatus.OK).body(responseBody);
@@ -65,23 +60,13 @@ public class ProductGetController {
     }
   }
 
-  @GetMapping("/search-by-id")
-  public ResponseEntity<?> getProductById(@RequestParam Integer id) {
+  @GetMapping("/{productId}")
+  public ResponseEntity<?> getProductById(@PathVariable Integer id) {
     try {
 
       Product product = productGetService.getProductById(id);
 
-      Map<String, Object> responseBody = new HashMap<>();
-      responseBody.put("id", product.getId());
-      responseBody.put("name", product.getName());
-      responseBody.put("description", product.getDescription());
-      responseBody.put("stock", product.getStock());
-      responseBody.put("price", product.getPrice());
-      responseBody.put("batch", product.getBatch());
-      responseBody.put("expirationDate", product.getExpirationDate());
-      responseBody.put("supplierId", product.getSupplierId());
-
-      return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+      return ResponseEntity.status(HttpStatus.OK).body(ProductMapper.toResponse(product));
 
     } catch (IllegalArgumentException e) {
 
@@ -103,20 +88,26 @@ public class ProductGetController {
 
   @GetMapping("/search")
   public ResponseEntity<?> getProductsByParameters(
-      @RequestParam(required = false) String name,
-      @RequestParam(required = false) String description,
-      @RequestParam(required = false) Integer stock,
-      @RequestParam(required = false) Double price,
-      @RequestParam(required = false) String batch,
-      @RequestParam(required = false) LocalDate expirationDate,
-      @RequestParam(required = false) Integer supplierId) {
+      ProductSearchRequest request) {
     try {
 
       List<Product> products =
           productGetService.getProductsByParameters(
-              name, description, stock, price, batch, expirationDate, supplierId);
+              request.name(),
+              request.description(),
+              request.stock(),
+              request.price(),
+              request.batch(),
+              request.expirationDate(),
+              request.supplierId()
+          );
 
-      return ResponseEntity.status(HttpStatus.OK).body(products);
+      List<ProductResponse> responseBody = new ArrayList<>();
+      for (Product product : products) {
+        responseBody.add(ProductMapper.toResponse(product));
+      }
+
+      return ResponseEntity.status(HttpStatus.OK).body(responseBody);
 
     } catch (IllegalArgumentException e) {
 

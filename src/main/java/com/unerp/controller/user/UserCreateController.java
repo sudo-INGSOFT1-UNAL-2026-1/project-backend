@@ -1,12 +1,17 @@
 package com.unerp.controller.user;
 
 import com.unerp.domain.user.User;
+import com.unerp.dto.user.CreateUserRequest;
+import com.unerp.dto.user.UserMapper;
+import com.unerp.dto.user.UserResponse;
 import com.unerp.service.user.UserCreateService;
+import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,22 +28,18 @@ public class UserCreateController {
 
   @PostMapping("/create")
   public ResponseEntity<?> createUser(
-      @RequestParam String name,
-      @RequestParam String email,
-      @RequestParam String password,
-      @RequestParam String roleName) {
+      @Valid @RequestBody CreateUserRequest request
+      ){
 
     try {
-      User user = userCreateService.createUser(name, email, password, roleName);
+      User user = userCreateService.createUser(
+          request.name(),
+          request.email(),
+          request.password(),
+          request.roleName()
+      );
 
-      Map<String, Object> responseBody = new HashMap<>();
-      responseBody.put("id", user.getId());
-      responseBody.put("name", user.getName());
-      responseBody.put("email", user.getEmail());
-      responseBody.put("state", user.getState().getName());
-      responseBody.put("role", user.getRole().getName());
-
-      return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
+      return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.toResponse(user));
     } catch (IllegalArgumentException e) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     } catch (IllegalStateException e) {
