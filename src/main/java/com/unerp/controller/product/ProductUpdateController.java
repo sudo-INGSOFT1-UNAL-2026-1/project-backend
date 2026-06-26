@@ -1,13 +1,17 @@
 package com.unerp.controller.product;
 
 import com.unerp.domain.product.Product;
+import com.unerp.dto.product.ProductMapper;
+import com.unerp.dto.product.ProductSearchRequest;
 import com.unerp.service.product.ProductUpdateService;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,33 +26,26 @@ public class ProductUpdateController {
     this.productUpdateService = productUpdateService;
   }
 
-  @PutMapping("/update")
+  @PutMapping("/update/{productId}")
   public ResponseEntity<?> updateProduct(
-      @RequestParam Integer id,
-      @RequestParam(required = false) String name,
-      @RequestParam(required = false) String description,
-      @RequestParam(required = false) Integer stock,
-      @RequestParam(required = false) Double price,
-      @RequestParam(required = false) String batch,
-      @RequestParam(required = false) LocalDate expirationDate,
-      @RequestParam(required = false) Integer supplierId) {
+      @PathVariable Integer id,
+      @RequestBody ProductSearchRequest request
+  ) {
     try {
 
       Product product =
           productUpdateService.updateProduct(
-              id, name, description, stock, price, batch, expirationDate, supplierId);
+              id,
+              request.name(),
+              request.description(),
+              request.stock(),
+              request.price(),
+              request.batch(),
+              request.expirationDate(),
+              request.supplierId()
+          );
 
-      Map<String, Object> responseBody = new HashMap<>();
-      responseBody.put("id", product.getId());
-      responseBody.put("name", product.getName());
-      responseBody.put("description", product.getDescription());
-      responseBody.put("stock", product.getStock());
-      responseBody.put("price", product.getPrice());
-      responseBody.put("batch", product.getBatch());
-      responseBody.put("expirationDate", product.getExpirationDate());
-      responseBody.put("supplierId", product.getSupplierId());
-
-      return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+      return ResponseEntity.status(HttpStatus.OK).body(ProductMapper.toResponse(product));
     } catch (IllegalArgumentException e) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     } catch (IllegalStateException e) {

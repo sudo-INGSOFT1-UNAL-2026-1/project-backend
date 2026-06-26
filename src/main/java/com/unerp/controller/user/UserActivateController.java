@@ -1,6 +1,8 @@
 package com.unerp.controller.user;
 
 import com.unerp.domain.user.User;
+import com.unerp.dto.user.UserMapper;
+import com.unerp.dto.user.UserResponse;
 import com.unerp.service.user.UserActivateService;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,14 +29,7 @@ public class UserActivateController {
     try {
       User user = userActivateService.activateUser(userId);
 
-      Map<String, Object> responseBody = new HashMap<>();
-      responseBody.put("id", user.getId());
-      responseBody.put("name", user.getName());
-      responseBody.put("email", user.getEmail());
-      responseBody.put("state", user.getState().getName());
-      responseBody.put("role", user.getRole().getName());
-
-      return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+      return ResponseEntity.status(HttpStatus.OK).body(UserMapper.toResponse(user));
     } catch (IllegalArgumentException e) {
 
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
