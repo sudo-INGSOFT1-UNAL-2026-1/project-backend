@@ -1,23 +1,30 @@
 package com.unerp.service;
 
-import com.unerp.domain.product.Product;
-import com.unerp.domain.sale.Sale;
-import com.unerp.domain.sale.SaleProduct;
-import com.unerp.domain.sale.SaleStatus;
-import com.unerp.repository.sale.SaleRepository;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import com.unerp.domain.product.Product;
+import com.unerp.domain.sale.Sale;
+import com.unerp.domain.sale.SaleProduct;
+import com.unerp.domain.sale.SaleStatus;
+import com.unerp.repository.sale.SaleRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class SaleServiceTest {

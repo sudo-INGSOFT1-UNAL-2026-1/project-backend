@@ -1,51 +1,57 @@
 package com.unerp.service.product;
 
-import java.time.LocalDate;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
+import com.unerp.domain.permission.PermissionName;
 import com.unerp.domain.product.Product;
 import com.unerp.domain.product.ProductBuilder;
 import com.unerp.repository.product.ProductReadRepository;
 import com.unerp.repository.product.ProductSpecifications;
 import com.unerp.repository.product.ProductWriteRepository;
+import com.unerp.service.auth.AuthorizationService;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ProductGetService {
-    
-    private final ProductReadRepository productReadRepository;
-    private final ProductWriteRepository productWriteRepository;
 
-    public ProductGetService(ProductReadRepository productReadRepository,
-        ProductWriteRepository productWriteRepository) {
+  private final ProductReadRepository productReadRepository;
+  private final ProductWriteRepository productWriteRepository;
+  private final AuthorizationService authorizationService;
 
-        this.productReadRepository = productReadRepository;
-        this.productWriteRepository = productWriteRepository;
-    }
+  public ProductGetService(
+      ProductReadRepository productReadRepository,
+      ProductWriteRepository productWriteRepository,
+      AuthorizationService authorizationService) {
+    this.productReadRepository = productReadRepository;
+    this.productWriteRepository = productWriteRepository;
+    this.authorizationService = authorizationService;
+  }
 
-    public Product updateProduct(
-        Integer id,
-        String name,
-        String description,
-        Integer stock,
-        Double price,
-        String batch,
-        LocalDate expirationDate,
-        Integer supplierId
-        ) {
+  public Product updateProduct(
+      Integer id,
+      String name,
+      String description,
+      Integer stock,
+      BigDecimal price,
+      String batch,
+      LocalDate expirationDate,
+      Integer supplierId) {
 
-        Product existingProduct = getProductById(id);
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
 
-        String existingName = existingProduct.getName();
-        String existingDescription = existingProduct.getDescription();
-        Integer existingStock = existingProduct.getStock();
-        Double existingPrice = existingProduct.getPrice().doubleValue();
-        String existingBatch = existingProduct.getBatch();
-        LocalDate existingExpirationDate = existingProduct.getExpirationDate();
-        Integer existingSupplierId = existingProduct.getSupplierId();
+    Product existingProduct = getProductById(id);
 
-        Product updatedProduct = new ProductBuilder()
+    String existingName = existingProduct.getName();
+    String existingDescription = existingProduct.getDescription();
+    Integer existingStock = existingProduct.getStock();
+    BigDecimal existingPrice = existingProduct.getPrice();
+    String existingBatch = existingProduct.getBatch();
+    LocalDate existingExpirationDate = existingProduct.getExpirationDate();
+    Integer existingSupplierId = existingProduct.getSupplierId();
+
+    Product updatedProduct =
+        new ProductBuilder()
             .setId(id)
             .setName(name != null ? name : existingName)
             .setDescription(description != null ? description : existingDescription)
@@ -55,35 +61,33 @@ public class ProductGetService {
             .setExpirationDate(expirationDate != null ? expirationDate : existingExpirationDate)
             .setSupplierId(supplierId != null ? supplierId : existingSupplierId)
             .build();
-        return productWriteRepository.save(updatedProduct);
-    }
 
-    public List<Product> getAllProducts() {
-        return productReadRepository.findAll();
-    }
+    return productWriteRepository.save(updatedProduct);
+  }
 
-    public Product getProductById(Integer id) {
-        return productReadRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Product doesn't exist"));
-    }
+  public List<Product> getAllProducts() {
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
+    return productReadRepository.findAll();
+  }
 
-    public List<Product> getProductsByParameters(
-            String name,
-            String description,
-            Integer stock,
-            Double price,
-            String batch,
-            LocalDate expirationDate,
-            Integer supplierId
-        ) {
-        
-            return productReadRepository.findAll(
-                ProductSpecifications.filterBy(
-                    name,
-                    description,
-                    stock,
-                    price,
-                    batch,
-                    expirationDate,
-                    supplierId));
-    }
+  public Product getProductById(Integer id) {
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
+    return productReadRepository
+        .findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("Product doesn't exist"));
+  }
+
+  public List<Product> getProductsByParameters(
+      String name,
+      String description,
+      Integer stock,
+      BigDecimal price,
+      String batch,
+      LocalDate expirationDate,
+      Integer supplierId) {
+
+    return productReadRepository.findAll(
+        ProductSpecifications.filterBy(
+            name, description, stock, price, batch, expirationDate, supplierId));
+  }
 }

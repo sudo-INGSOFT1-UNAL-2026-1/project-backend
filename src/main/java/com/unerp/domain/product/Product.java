@@ -1,7 +1,11 @@
 package com.unerp.domain.product;
 
-
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -9,113 +13,108 @@ import java.time.LocalDate;
 @Table(name = "product")
 public class Product {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    private String name;
+  private String name;
 
-    private String description;
+  private String description;
 
-    private Integer stock;
-    
-    private BigDecimal price;  
+  private Integer stock;
 
-    private String batch;
+  private BigDecimal price;
 
-    @Column(name = "expiration_date")
-    private LocalDate expirationDate;
+  private String batch;
 
-    @Column(name = "supplier_id")
-    private Integer supplierId;
+  @Column(name = "expiration_date")
+  private LocalDate expirationDate;
 
-    
-    public Product(
-            Integer id,
-            String name,
-            String description,
-            Integer stock,
-            BigDecimal price,
-            String batch,
-            LocalDate expirationDate,
-            Integer supplierId
-    ) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.stock = stock;
-        this.price = price;
-        this.batch = batch;
-        this.expirationDate = expirationDate;
-        this.supplierId = supplierId;
-    }
+  @Column(name = "supplier_id")
+  private Integer supplierId;
 
-    public Product() {
-    }
+  public Product() {}
 
-    
-    public Integer getId() {
-        return id;
-    }
+  public Product(
+      Integer id,
+      String name,
+      String description,
+      Integer stock,
+      BigDecimal price,
+      String batch,
+      LocalDate expirationDate,
+      Integer supplierId) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.stock = stock;
+    this.price = price;
+    this.batch = batch;
+    this.expirationDate = expirationDate;
+    this.supplierId = supplierId;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public Integer getStock() {
-        return stock;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
+  public Integer getStock() {
+    return stock;
+  }
 
-    public String getBatch() {
-        return batch;
-    }
+  public BigDecimal getPrice() {
+    return price;
+  }
 
-    public LocalDate getExpirationDate() {
-        return expirationDate;
-    }
+  public String getBatch() {
+    return batch;
+  }
 
-    public Integer getSupplierId() {
-        return supplierId;
-    }
+  public LocalDate getExpirationDate() {
+    return expirationDate;
+  }
 
-   
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  public Integer getSupplierId() {
+    return supplierId;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setStock(Integer stock) {
-        this.stock = stock;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
+  public void setStock(Integer stock) {
+    this.stock = stock;
+  }
 
-    public void setBatch(String batch) {
-        this.batch = batch;
-    }
+  public void setPrice(BigDecimal price) {
+    this.price = price;
+  }
 
-    public void setExpirationDate(LocalDate expirationDate) {
-        this.expirationDate = expirationDate;
-    }
+  public void setBatch(String batch) {
+    this.batch = batch;
+  }
 
-    public void setSupplierId(Integer supplierId) {
-        this.supplierId = supplierId;
-    }
+  public void setExpirationDate(LocalDate expirationDate) {
+    this.expirationDate = expirationDate;
+  }
+
+  public void setSupplierId(Integer supplierId) {
+    this.supplierId = supplierId;
+  }
 }
