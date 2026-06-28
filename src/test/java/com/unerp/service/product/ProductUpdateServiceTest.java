@@ -113,7 +113,7 @@ public class ProductUpdateServiceTest {
     assertNotNull(result);
     assertEquals(3, result.getId());
     assertEquals("Aceite", result.getName());
-    assertEquals("Aceite vegetal", result.getDescription());
+    assertEquals("Aceite vegetal", result.getDescription());git status
     assertEquals(15, result.getStock());
     assertEquals(new BigDecimal("12000"), result.getPrice());
     assertEquals("Lote-C", result.getBatch());
