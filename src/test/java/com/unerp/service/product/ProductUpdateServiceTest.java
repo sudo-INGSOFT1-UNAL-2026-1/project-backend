@@ -9,10 +9,12 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+
 import com.unerp.domain.product.Product;
 import com.unerp.repository.product.ProductReadRepository;
 import com.unerp.repository.product.ProductWriteRepository;
 import com.unerp.service.auth.AuthorizationService;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -44,7 +46,7 @@ public class ProductUpdateServiceTest {
             "Arroz",
             "Arroz blanco",
             20,
-            Double.valueOf("3500"),
+            new BigDecimal("3500"),
             "Lote-A",
             LocalDate.of(2026, 12, 31),
             1);
@@ -60,7 +62,7 @@ public class ProductUpdateServiceTest {
             "Arroz Premium",
             "Arroz blanco premium",
             50,
-            Double.valueOf("4200"),
+            new BigDecimal("4200"),
             "Lote-B",
             LocalDate.of(2027, 1, 15),
             2);
@@ -70,7 +72,7 @@ public class ProductUpdateServiceTest {
     assertEquals("Arroz Premium", result.getName());
     assertEquals("Arroz blanco premium", result.getDescription());
     assertEquals(50, result.getStock());
-    assertEquals(Double.valueOf("4200"), result.getPrice());
+    assertEquals(new BigDecimal("4200"), result.getPrice());
     assertEquals("Lote-B", result.getBatch());
     assertEquals(LocalDate.of(2027, 1, 15), result.getExpirationDate());
     assertEquals(2, result.getSupplierId());
@@ -87,7 +89,7 @@ public class ProductUpdateServiceTest {
             "Aceite",
             "Aceite vegetal",
             15,
-            Double.valueOf("12000"),
+            new BigDecimal("12000"),
             "Lote-C",
             LocalDate.of(2026, 8, 20),
             4);
@@ -113,7 +115,7 @@ public class ProductUpdateServiceTest {
     assertEquals("Aceite", result.getName());
     assertEquals("Aceite vegetal", result.getDescription());
     assertEquals(15, result.getStock());
-    assertEquals(Double.valueOf("12000"), result.getPrice());
+    assertEquals(new BigDecimal("12000"), result.getPrice());
     assertEquals("Lote-C", result.getBatch());
     assertEquals(LocalDate.of(2026, 8, 20), result.getExpirationDate());
     assertEquals(4, result.getSupplierId());
@@ -136,7 +138,7 @@ public class ProductUpdateServiceTest {
                     "Producto inexistente",
                     "No existe",
                     10,
-                    Double.valueOf("5000"),
+                    new BigDecimal("5000"),
                     "Lote-X",
                     LocalDate.of(2026, 10, 10),
                     1));

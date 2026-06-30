@@ -1,20 +1,18 @@
 package com.unerp.controller.user;
 
-import com.unerp.domain.user.User;
-import com.unerp.dto.user.CreateUserRequest;
-import com.unerp.dto.user.UserMapper;
-import com.unerp.dto.user.UserResponse;
-import com.unerp.service.user.UserCreateService;
-import jakarta.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.unerp.domain.user.User;
+import com.unerp.dto.user.CreateUserRequest;
+import com.unerp.dto.user.UserMapper;
+import com.unerp.service.user.UserCreateService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/user")

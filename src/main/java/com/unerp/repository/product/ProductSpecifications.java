@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
+import java.math.BigDecimal;
 
 public class ProductSpecifications {
 
@@ -13,7 +14,7 @@ public class ProductSpecifications {
       String name,
       String description,
       Integer stock,
-      Double price,
+      BigDecimal price,
       String batch,
       LocalDate expirationDate,
       Integer supplierId) {

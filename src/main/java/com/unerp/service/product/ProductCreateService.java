@@ -9,6 +9,7 @@ import com.unerp.repository.supplier.SupplierReadRepository;
 import com.unerp.service.auth.AuthorizationService;
 import java.time.LocalDate;
 import org.springframework.stereotype.Service;
+import java.math.BigDecimal;
 
 @Service
 public class ProductCreateService {
@@ -34,7 +35,7 @@ public class ProductCreateService {
       String name,
       String description,
       Integer stock,
-      Double price,
+      BigDecimal price,
       String batch,
       LocalDate expirationDate,
       Integer supplierId) {

@@ -1,11 +1,12 @@
 package com.unerp.domain.product;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -22,21 +23,24 @@ public class Product {
 
   private Integer stock;
 
-  private Double price;
+  private BigDecimal price;
 
   private String batch;
 
+  @Column(name = "expiration_date")
   private LocalDate expirationDate;
 
-  @JoinColumn(name = "supplier_id")
+  @Column(name = "supplier_id")
   private Integer supplierId;
+
+  public Product() {}
 
   public Product(
       Integer id,
       String name,
       String description,
       Integer stock,
-      Double price,
+      BigDecimal price,
       String batch,
       LocalDate expirationDate,
       Integer supplierId) {
@@ -49,8 +53,6 @@ public class Product {
     this.expirationDate = expirationDate;
     this.supplierId = supplierId;
   }
-
-  public Product() {}
 
   public Integer getId() {
     return id;
@@ -68,7 +70,7 @@ public class Product {
     return stock;
   }
 
-  public Double getPrice() {
+  public BigDecimal getPrice() {
     return price;
   }
 
@@ -82,5 +84,37 @@ public class Product {
 
   public Integer getSupplierId() {
     return supplierId;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public void setStock(Integer stock) {
+    this.stock = stock;
+  }
+
+  public void setPrice(BigDecimal price) {
+    this.price = price;
+  }
+
+  public void setBatch(String batch) {
+    this.batch = batch;
+  }
+
+  public void setExpirationDate(LocalDate expirationDate) {
+    this.expirationDate = expirationDate;
+  }
+
+  public void setSupplierId(Integer supplierId) {
+    this.supplierId = supplierId;
   }
 }

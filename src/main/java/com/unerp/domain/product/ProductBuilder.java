@@ -1,5 +1,6 @@
 package com.unerp.domain.product;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class ProductBuilder {
@@ -8,7 +9,7 @@ public class ProductBuilder {
   private String name;
   private String description;
   private Integer stock;
-  private Double price;
+  private BigDecimal price;
   private String batch;
   private LocalDate expirationDate;
   private Integer supplierId;
@@ -33,7 +34,7 @@ public class ProductBuilder {
     return this;
   }
 
-  public ProductBuilder setPrice(Double price) {
+  public ProductBuilder setPrice(BigDecimal price) {
     this.price = price;
     return this;
   }

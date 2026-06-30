@@ -6,6 +6,7 @@ import com.unerp.domain.product.ProductBuilder;
 import com.unerp.repository.product.ProductReadRepository;
 import com.unerp.repository.product.ProductWriteRepository;
 import com.unerp.service.auth.AuthorizationService;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,7 @@ public class ProductUpdateService {
   public ProductUpdateService(
       ProductReadRepository productReadRepository,
       ProductWriteRepository productWriteRepository,
-      AuthorizationService authorizationService
-  ) {
+      AuthorizationService authorizationService) {
     this.productReadRepository = productReadRepository;
     this.productWriteRepository = productWriteRepository;
     this.authorizationService = authorizationService;
@@ -31,7 +31,7 @@ public class ProductUpdateService {
       String name,
       String description,
       Integer stock,
-      Double price,
+      BigDecimal price,
       String batch,
       LocalDate expirationDate,
       Integer supplierId) {
@@ -45,7 +45,7 @@ public class ProductUpdateService {
     String existingName = existingProduct.getName();
     String existingDescription = existingProduct.getDescription();
     Integer existingStock = existingProduct.getStock();
-    Double existingPrice = existingProduct.getPrice();
+    BigDecimal existingPrice = existingProduct.getPrice();
     String existingBatch = existingProduct.getBatch();
     LocalDate existingExpirationDate = existingProduct.getExpirationDate();
     Integer existingSupplierId = existingProduct.getSupplierId();
@@ -61,6 +61,7 @@ public class ProductUpdateService {
             .setExpirationDate(expirationDate != null ? expirationDate : existingExpirationDate)
             .setSupplierId(supplierId != null ? supplierId : existingSupplierId)
             .build();
+
     return productWriteRepository.save(updatedProduct);
   }
 }

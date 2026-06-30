@@ -1,18 +1,17 @@
 package com.unerp.controller.user;
 
-import com.unerp.domain.user.User;
-import com.unerp.dto.user.UserMapper;
-import com.unerp.dto.user.UserResponse;
-import com.unerp.service.user.UserDeactivateService;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.NoSuchElementException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.unerp.domain.user.User;
+import com.unerp.dto.user.UserMapper;
+import com.unerp.service.user.UserDeactivateService;
 
 @RestController
 @RequestMapping("/user")

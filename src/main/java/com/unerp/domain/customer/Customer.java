@@ -11,31 +11,55 @@ import jakarta.persistence.Table;
 @Table(name = "customer")
 public class Customer {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-  private String name;
+    private String name;
 
-  @Nullable private String address;
+    @Nullable 
+    private String address;
 
-  public Customer(Integer id, String name, @Nullable String address) {
-    this.id = id;
-    this.name = name;
-    this.address = address;
-  }
+    
+    public Customer(Integer id, String name, @Nullable String address) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+    }
 
-  public Customer() {}
+  
+    public Customer(String name, String address) {
+        this.name = name;
+        this.address = address;
+    }
 
-  public Integer getId() {
-    return id;
-  }
+    
+    public Customer() {}
 
-  public String getName() {
-    return name;
-  }
+    
+    public Integer getId() {
+        return id;
+    }
 
-  public String getAddress() {
-    return address;
-  }
+    public String getName() {
+        return name;
+    }
+
+    @Nullable
+    public String getAddress() {
+        return address;
+    }
+
+    
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAddress(@Nullable String address) {
+        this.address = address;
+    }
 }

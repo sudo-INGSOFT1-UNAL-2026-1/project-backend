@@ -2,7 +2,7 @@ package com.unerp.dto.product;
 
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
-
+import java.math.BigDecimal;
 public record ProductCreateRequest(
 
     @NotBlank
@@ -15,7 +15,7 @@ public record ProductCreateRequest(
     Integer stock,
 
     @NotBlank
-    Double price,
+    BigDecimal price,
 
     @NotBlank
     String batch,

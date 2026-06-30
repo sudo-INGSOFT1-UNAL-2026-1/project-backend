@@ -1,5 +1,6 @@
 package com.unerp.service.product;
 
+import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -39,13 +40,13 @@ public class ProductCreateServiceTest {
 
     when(productWriteRepository.save(any(Product.class))).thenAnswer(invocation -> invocation.getArgument(0));
     
-    Product product = productCreateService.createProduct("Papas", "Deliciosas papas", 10, Double.valueOf("2500"), "PapasBatch", null, 1);
+    Product product = productCreateService.createProduct("Papas", "Deliciosas papas", 10, new BigDecimal("2500"), "PapasBatch", null, 1);
 
     assertNotNull(product);
     assertEquals("Papas", product.getName());
     assertEquals("Deliciosas papas", product.getDescription());
     assertEquals(10, product.getStock());
-    assertEquals(Double.valueOf("2500"), product.getPrice());
+    assertEquals(new BigDecimal("2500"), product.getPrice());
     assertEquals("PapasBatch", product.getBatch());
     assertEquals(1, product.getSupplierId());
     verify(productWriteRepository).save(any(Product.class));
@@ -61,7 +62,7 @@ public class ProductCreateServiceTest {
     assertThrows(
         IllegalArgumentException.class,
         () ->
-            productCreateService.createProduct("Papas", "Deliciosas papas", 10, Double.valueOf("2500"), "PapasBatch", null, 1));
+            productCreateService.createProduct("Papas", "Deliciosas papas", 10, new BigDecimal("2500"), "PapasBatch", null, 1));
   }
 
   @Test
@@ -73,7 +74,7 @@ public class ProductCreateServiceTest {
     assertThrows(
         IllegalArgumentException.class,
         () ->
-            productCreateService.createProduct("Papas", "Deliciosas papas", 10, Double.valueOf("2500"), "PapasBatch", null, 1));
+            productCreateService.createProduct("Papas", "Deliciosas papas", 10, new BigDecimal("2500"), "PapasBatch", null, 1));
   }
 
   @Test
@@ -86,7 +87,7 @@ public class ProductCreateServiceTest {
     assertThrows(
         IllegalArgumentException.class,
         () ->
-            productCreateService.createProduct("Papas", "Deliciosas papas", 10, Double.valueOf("2500"), "PapasBatch", null, 1));
+            productCreateService.createProduct("Papas", "Deliciosas papas", 10, new BigDecimal("2500"), "PapasBatch", null, 1));
   }
 
   @Test
@@ -100,6 +101,6 @@ public class ProductCreateServiceTest {
     assertThrows(
         IllegalArgumentException.class,
         () ->
-            productCreateService.createProduct("Papas", "Deliciosas papas", 10, Double.valueOf("2500"), "PapasBatch", null, 1));
+            productCreateService.createProduct("Papas", "Deliciosas papas", 10, new BigDecimal("2500"), "PapasBatch", null, 1));
   }
 }

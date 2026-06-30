@@ -7,6 +7,7 @@ import com.unerp.repository.product.ProductReadRepository;
 import com.unerp.repository.product.ProductSpecifications;
 import com.unerp.repository.product.ProductWriteRepository;
 import com.unerp.service.auth.AuthorizationService;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,6 @@ public class ProductGetService {
       ProductReadRepository productReadRepository,
       ProductWriteRepository productWriteRepository,
       AuthorizationService authorizationService) {
-
     this.productReadRepository = productReadRepository;
     this.productWriteRepository = productWriteRepository;
     this.authorizationService = authorizationService;
@@ -33,7 +33,7 @@ public class ProductGetService {
       String name,
       String description,
       Integer stock,
-      Double price,
+      BigDecimal price,
       String batch,
       LocalDate expirationDate,
       Integer supplierId) {
@@ -45,7 +45,7 @@ public class ProductGetService {
     String existingName = existingProduct.getName();
     String existingDescription = existingProduct.getDescription();
     Integer existingStock = existingProduct.getStock();
-    Double existingPrice = existingProduct.getPrice();
+    BigDecimal existingPrice = existingProduct.getPrice();
     String existingBatch = existingProduct.getBatch();
     LocalDate existingExpirationDate = existingProduct.getExpirationDate();
     Integer existingSupplierId = existingProduct.getSupplierId();
@@ -61,6 +61,7 @@ public class ProductGetService {
             .setExpirationDate(expirationDate != null ? expirationDate : existingExpirationDate)
             .setSupplierId(supplierId != null ? supplierId : existingSupplierId)
             .build();
+
     return productWriteRepository.save(updatedProduct);
   }
 
@@ -80,7 +81,7 @@ public class ProductGetService {
       String name,
       String description,
       Integer stock,
-      Double price,
+      BigDecimal price,
       String batch,
       LocalDate expirationDate,
       Integer supplierId) {
