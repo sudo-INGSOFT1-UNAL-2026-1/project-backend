@@ -1,65 +1,45 @@
 package com.unerp.controller.supplier;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.unerp.domain.supplier.Supplier;
+import com.unerp.dto.supplier.SupplierCreateRequest;
+import com.unerp.dto.supplier.SupplierMapper;
+import com.unerp.service.supplier.SupplierCreateService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.unerp.domain.supplier.Supplier;
-import com.unerp.service.supplier.SupplierCreateService;
 
 @RestController
 @RequestMapping("/supplier")
 public class SupplierCreateController {
 
-    private final SupplierCreateService supplierCreateService;
+  private final SupplierCreateService supplierCreateService;
 
-    public SupplierCreateController(SupplierCreateService supplierCreateService) {
-        this.supplierCreateService = supplierCreateService;
+  public SupplierCreateController(SupplierCreateService supplierCreateService) {
+    this.supplierCreateService = supplierCreateService;
+  }
+
+  @PostMapping("/create")
+  public ResponseEntity<?> createSupplier(
+      @Valid @RequestBody SupplierCreateRequest request){
+    try {
+
+      Supplier supplier = supplierCreateService.createSupplier(
+          request.name(),
+          request.phone(),
+          request.email()
+      );
+
+      return ResponseEntity.status(HttpStatus.CREATED).body(SupplierMapper.toResponse(supplier));
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    } catch (IllegalStateException e) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    } catch (SecurityException e) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
-
-    @PostMapping("/create")
-    public ResponseEntity<?> createSupplier(
-        @RequestParam String name,
-        @RequestParam String phone,
-        @RequestParam String email
-    ) {
-        try { 
-
-        Supplier supplier = supplierCreateService.createSupplier(
-            name,
-            phone,
-            email
-        );
-
-        Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("id", supplier.getId());
-        responseBody.put("name", supplier.getName());
-        responseBody.put("phone", supplier.getPhone());
-        responseBody.put("email", supplier.getEmail());
-
-        return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(responseBody);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
-        } catch (IllegalStateException e) {
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(e.getMessage());
-        } catch (SecurityException e) {
-
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(e.getMessage());
-
-        }
-    }
+  }
 }

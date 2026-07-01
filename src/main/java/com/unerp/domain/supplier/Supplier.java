@@ -11,45 +11,40 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "supplier")
 public class Supplier {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
 
-    private String name;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    @Nullable
-    private String phone;
+  private String name;
 
-    @Column(unique = true)
-    private String email;
+  @Nullable private String phone;
 
-    public Supplier(Integer id,
-        String name,
-        @Nullable String phone,
-        String email) {
-        this.id = id;
-        this.name = name;
-        this.phone = phone;
-        this.email = email;
-    }
+  @Column(unique = true)
+  private String email;
 
-    public Supplier() {
-    }
+  public Supplier(Integer id, String name, @Nullable String phone, String email) {
+    this.id = id;
+    this.name = name;
+    this.phone = phone;
+    this.email = email;
+  }
 
-    public Integer getId() {
-        return id;
-    }
+  public Supplier() {}
 
-    public String getName() {
-        return name;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public String getPhone() {
-        return phone;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public String getPhone() {
+    return phone;
+  }
+
+  public String getEmail() {
+    return email;
+  }
 }
