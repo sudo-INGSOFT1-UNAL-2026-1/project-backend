@@ -14,4 +14,8 @@ public interface PurchaseProductReadRepository
     public boolean existsByPurchaseIdAndProductId(Integer purchaseId, Integer productId);
 
     public List<PurchaseProduct> findAll(Specification<PurchaseProduct> filterBy);
+
+    public boolean existsByProductId(Integer productId);
+
+    public boolean existsByPurchaseId(Integer purchaseId);
 }
