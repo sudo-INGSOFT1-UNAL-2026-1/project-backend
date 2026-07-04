@@ -1,13 +1,15 @@
 package com.unerp.domain.purchaseProduct;
 
+import java.math.BigDecimal;
+
 public class PurchaseProductBuilder {
 
     private Integer id;
     private Integer purchaseId;
     private Integer productId;
     private Integer quantity;
-    private Double unitPrice;
-    private Double subtotal;
+    private BigDecimal unitPrice;
+    private BigDecimal subtotal;
 
     public PurchaseProductBuilder setId(Integer id) {
         this.id = id;
@@ -29,12 +31,12 @@ public class PurchaseProductBuilder {
         return this;
     }
 
-    public PurchaseProductBuilder setUnitPrice(Double unitPrice) {
+    public PurchaseProductBuilder setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
         return this;
     }
 
-    public PurchaseProductBuilder setSubtotal(Double subtotal) {
+    public PurchaseProductBuilder setSubtotal(BigDecimal subtotal) {
         this.subtotal = subtotal;
         return this;
     }

@@ -1,5 +1,7 @@
 package com.unerp.domain.purchaseProduct;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,17 +27,17 @@ public class PurchaseProduct {
     private Integer quantity;
 
     @Column(name = "unit_price")
-    private Double unitPrice;
+    private BigDecimal unitPrice;
     
-    private Double subtotal;
+    private BigDecimal subtotal;
 
     public PurchaseProduct(
             Integer id,
             Integer purchaseId,
             Integer productId,
             Integer quantity,
-            Double unitPrice,
-            Double subtotal
+            BigDecimal unitPrice,
+            BigDecimal subtotal
     ) {
         this.id = id;
         this.purchaseId = purchaseId;
@@ -63,11 +65,11 @@ public class PurchaseProduct {
         return quantity;
     }
 
-    public Double getUnitPrice() {
+    public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
-    public Double getSubtotal() {
+    public BigDecimal getSubtotal() {
         return subtotal;
     }
 }
