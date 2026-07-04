@@ -2,6 +2,8 @@ package com.unerp.domain.purchase;
 
 import java.time.LocalDate;
 
+import com.unerp.domain.purchase.state.PurchaseState;
+
 public class PurchaseBuilder {
 
     private Integer id;
@@ -9,7 +11,7 @@ public class PurchaseBuilder {
     private Integer userId;
     private LocalDate paymentDate;
     private LocalDate deliveryDate;
-    private String status;
+    private PurchaseState state;
     private Double totalCost;
 
     public PurchaseBuilder setId(Integer id) {
@@ -37,8 +39,8 @@ public class PurchaseBuilder {
         return this;
     }
 
-    public PurchaseBuilder setStatus(String status) {
-        this.status = status;
+    public PurchaseBuilder setState(PurchaseState state) {
+        this.state = state;
         return this;
     }
 
@@ -48,6 +50,6 @@ public class PurchaseBuilder {
     }
 
     public Purchase build() {
-        return new Purchase(id, supplierId, userId, paymentDate, deliveryDate, status, totalCost);
+        return new Purchase(id, supplierId, userId, paymentDate, deliveryDate, state, totalCost);
     }
 }

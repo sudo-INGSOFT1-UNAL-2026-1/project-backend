@@ -2,6 +2,8 @@ package com.unerp.domain.purchase;
 
 import java.time.LocalDate;
 
+import com.unerp.domain.purchase.state.PurchaseState;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "purchase")
@@ -30,7 +33,10 @@ public class Purchase {
     @Column(name = "delivery_date")
     private LocalDate deliveryDate;
 
-    private String status;
+    @Transient private PurchaseState state;
+
+    @Column(name = "status")
+    private String stateString;
     
     @Column(name = "total_cost")
     private Double totalCost;
@@ -41,7 +47,7 @@ public class Purchase {
             Integer userId,
             LocalDate paymentDate,
             LocalDate deliveryDate,
-            String status,
+            PurchaseState state,
             Double totalCost
     ) {
         this.id = id;
@@ -49,7 +55,8 @@ public class Purchase {
         this.userId = userId;
         this.paymentDate = paymentDate;
         this.deliveryDate = deliveryDate;
-        this.status = status;
+        this.state = state;
+        this.stateString = state.getName();
         this.totalCost = totalCost;
     }
 
@@ -76,8 +83,28 @@ public class Purchase {
         return deliveryDate;
     }
 
-    public String getStatus() {
-        return status;
+    public PurchaseState getState() {
+        return state;
+    }
+
+    public void pay() {
+        this.state = this.state.paid();
+        this.stateString = this.state.getName();
+    }
+
+    public void pending() {
+        this.state = this.state.pending();
+        this.stateString = this.state.getName();
+    }
+
+    public void receive() {
+        this.state = this.state.received();
+        this.stateString = this.state.getName();
+    }
+
+    public void cancel() {
+        this.state = this.state.canceled();
+        this.stateString = this.state.getName();
     }
 
     public Double getTotalCost() {
