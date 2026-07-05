@@ -1,55 +1,91 @@
-package com.unerp.service.product;
+package com.unerp.service.purchase;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.unerp.domain.permission.PermissionName;
 import com.unerp.repository.product.ProductReadRepository;
-import com.unerp.repository.product.ProductWriteRepository;
+import com.unerp.repository.purchase.PurchaseReadRepository;
+import com.unerp.repository.purchase.PurchaseWriteRepository;
+import com.unerp.repository.purchaseProduct.PurchaseProductReadRepository;
+import com.unerp.repository.purchaseProduct.PurchaseProductWriteRepository;
 import com.unerp.repository.supplier.SupplierReadRepository;
 import com.unerp.service.auth.AuthorizationService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
 public class PurchaseDeleteService {
 
+  private final PurchaseReadRepository purchaseReadRepository;
+  private final PurchaseWriteRepository purchaseWriteRepository;
+  private final PurchaseProductReadRepository purchaseProductReadRepository;
+  private final PurchaseProductWriteRepository purchaseProductWriteRepository;
   private final ProductReadRepository productReadRepository;
   private final SupplierReadRepository supplierReadRepository;
-  private final ProductWriteRepository productWriteRepository;
   private final AuthorizationService authorizationService;
 
-  public ProductDeleteService(
+  public PurchaseDeleteService(
+      PurchaseReadRepository purchaseReadRepository,
+      PurchaseWriteRepository purchaseWriteRepository,
+      PurchaseProductReadRepository purchaseProductReadRepository,
+      PurchaseProductWriteRepository purchaseProductWriteRepository,
       ProductReadRepository productReadRepository,
       SupplierReadRepository supplierReadRepository,
-      ProductWriteRepository productWriteRepository,
       AuthorizationService authorizationService) {
 
+    this.purchaseReadRepository = purchaseReadRepository;
+    this.purchaseWriteRepository = purchaseWriteRepository;
+    this.purchaseProductReadRepository = purchaseProductReadRepository;
+    this.purchaseProductWriteRepository = purchaseProductWriteRepository;
     this.productReadRepository = productReadRepository;
     this.supplierReadRepository = supplierReadRepository;
-    this.productWriteRepository = productWriteRepository;
     this.authorizationService = authorizationService;
   }
 
-  public void deleteProductById(Integer id) {
-    if (!productReadRepository.existsById(id)) {
-      throw new IllegalArgumentException("Product doesn't exist");
-    }
+  public void deletePurchaseById(Integer id) {
     authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
-    productWriteRepository.deleteById(id);
+    if (!purchaseReadRepository.existsById(id)) {
+      throw new IllegalArgumentException("Purchase doesn't exist");
+    }
+    purchaseWriteRepository.deleteById(id);
   }
 
-  public void deleteProductByBatch(String batch) {
-    if (!productReadRepository.existsByBatch(batch)) {
-      throw new IllegalArgumentException("Batch doesn't exist");
-    }
+  public void deletePurchaseBySupplierId(Integer supplierId) {
     authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
-    productWriteRepository.deleteByBatch(batch);
-  }
-
-  public void deleteProductBySupplierId(Integer supplierId) {
     if (!supplierReadRepository.existsById(supplierId)) {
       throw new IllegalArgumentException("Supplier doesn't exist");
     }
+    purchaseWriteRepository.deleteBySupplierId(supplierId);
+  }
+
+  public void deletePurchaseProductsByPurchaseId(Integer id) {
     authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
-    productWriteRepository.deleteBySupplierId(supplierId);
+    purchaseProductWriteRepository.deleteByPurchaseId(id);
+  }
+
+  public void deletePurchaseProductById(Integer id) {
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
+    if (!productReadRepository.existsById(id)) {
+      throw new IllegalArgumentException("PurchaseProduct doesn't exist");
+    }
+    purchaseProductWriteRepository.deleteById(id);
+  }
+
+  public void deletePurchaseProductByPurchaseId(Integer purchaseId) {
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
+    if (!purchaseProductReadRepository.existsByPurchaseId(purchaseId)) {
+      throw new IllegalArgumentException("Purchase doesn't exist");
+    }
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
+    purchaseProductWriteRepository.deleteByPurchaseId(purchaseId);
+  }
+
+  public void deletePurchaseProductByProductId(Integer productId) {
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
+    if (!purchaseProductReadRepository.existsByProductId(productId)) {
+      throw new IllegalArgumentException("Product doesn't exist");
+    }
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
+    purchaseProductWriteRepository.deleteByProductId(productId);
   }
 }

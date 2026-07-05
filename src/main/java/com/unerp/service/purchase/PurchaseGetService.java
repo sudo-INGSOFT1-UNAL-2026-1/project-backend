@@ -1,93 +1,129 @@
-package com.unerp.service.product;
+package com.unerp.service.purchase;
 
 import com.unerp.domain.permission.PermissionName;
-import com.unerp.domain.product.Product;
-import com.unerp.domain.product.ProductBuilder;
-import com.unerp.repository.product.ProductReadRepository;
-import com.unerp.repository.product.ProductSpecifications;
-import com.unerp.repository.product.ProductWriteRepository;
+import com.unerp.domain.purchaseProduct.PurchaseProduct;
+import com.unerp.repository.purchase.PurchaseSpecifications;
+import com.unerp.repository.purchase.PurchaseReadRepository;
+import com.unerp.repository.purchase.PurchaseWriteRepository;
+import com.unerp.repository.purchaseProduct.PurchaseProductReadRepository;
+import com.unerp.repository.purchaseProduct.PurchaseProductSpecifications;
 import com.unerp.service.auth.AuthorizationService;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+
 import org.springframework.stereotype.Service;
+
+import com.unerp.domain.purchase.Purchase;
+import com.unerp.domain.purchase.PurchaseBuilder;
+import com.unerp.domain.purchase.state.PurchaseState;
 
 @Service
 public class PurchaseGetService {
 
-  private final ProductReadRepository productReadRepository;
-  private final ProductWriteRepository productWriteRepository;
+  private final PurchaseReadRepository purchaseReadRepository;
+  private final PurchaseWriteRepository purchaseWriteRepository;
+  private final PurchaseProductReadRepository purchaseProductReadRepository;
   private final AuthorizationService authorizationService;
 
-  public ProductGetService(
-      ProductReadRepository productReadRepository,
-      ProductWriteRepository productWriteRepository,
+  public PurchaseGetService(
+      PurchaseReadRepository purchaseReadRepository,
+      PurchaseWriteRepository purchaseWriteRepository,
+      PurchaseProductReadRepository purchaseProductReadRepository,
       AuthorizationService authorizationService) {
-    this.productReadRepository = productReadRepository;
-    this.productWriteRepository = productWriteRepository;
+    this.purchaseReadRepository = purchaseReadRepository;
+    this.purchaseWriteRepository = purchaseWriteRepository;
+    this.purchaseProductReadRepository = purchaseProductReadRepository;
     this.authorizationService = authorizationService;
   }
 
-  public Product updateProduct(
+  public Purchase updatePurchase(
       Integer id,
-      String name,
-      String description,
-      Integer stock,
-      BigDecimal price,
-      String batch,
-      LocalDate expirationDate,
-      Integer supplierId) {
+      Integer supplierId,
+      Integer userId,
+      LocalDate paymentDate,
+      LocalDate deliveryDate,
+      PurchaseState state,
+      BigDecimal totalCost) {
 
     authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
 
-    Product existingProduct = getProductById(id);
+    Purchase existingPurchase = getPurchaseById(id);
 
-    String existingName = existingProduct.getName();
-    String existingDescription = existingProduct.getDescription();
-    Integer existingStock = existingProduct.getStock();
-    BigDecimal existingPrice = existingProduct.getPrice();
-    String existingBatch = existingProduct.getBatch();
-    LocalDate existingExpirationDate = existingProduct.getExpirationDate();
-    Integer existingSupplierId = existingProduct.getSupplierId();
+    Integer existingSupplierId = existingPurchase.getSupplierId();
+    Integer existingUserId = existingPurchase.getUserId();
+    LocalDate existingPaymentDate = existingPurchase.getPaymentDate();
+    LocalDate existingDeliveryDate = existingPurchase.getDeliveryDate();
+    PurchaseState existingState = existingPurchase.getState();
+    BigDecimal existingTotalCost = existingPurchase.getTotalCost();
 
-    Product updatedProduct =
-        new ProductBuilder()
+    Purchase updatedPurchase =
+        new PurchaseBuilder()
             .setId(id)
-            .setName(name != null ? name : existingName)
-            .setDescription(description != null ? description : existingDescription)
-            .setStock(stock != null ? stock : existingStock)
-            .setPrice(price != null ? price : existingPrice)
-            .setBatch(batch != null ? batch : existingBatch)
-            .setExpirationDate(expirationDate != null ? expirationDate : existingExpirationDate)
+            .setSupplierId(supplierId != null ? supplierId : existingSupplierId)
+            .setUserId(userId != null ? userId : existingUserId)
+            .setPaymentDate(paymentDate != null ? paymentDate : existingPaymentDate)
+            .setDeliveryDate(deliveryDate != null ? deliveryDate : existingDeliveryDate)
+            .setState(state != null ? state : existingState)
+            .setTotalCost(totalCost != null ? totalCost : existingTotalCost)
             .setSupplierId(supplierId != null ? supplierId : existingSupplierId)
             .build();
 
-    return productWriteRepository.save(updatedProduct);
+    return purchaseWriteRepository.save(updatedPurchase);
   }
 
-  public List<Product> getAllProducts() {
+  public List<Purchase> getAllPurchases() {
     authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
-    return productReadRepository.findAll();
+    return purchaseReadRepository.findAll();
   }
 
-  public Product getProductById(Integer id) {
+  public Purchase getPurchaseById(Integer id) {
     authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
-    return productReadRepository
+    return purchaseReadRepository
         .findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Product doesn't exist"));
+        .orElseThrow(() -> new IllegalArgumentException("Purchase doesn't exist"));
   }
 
-  public List<Product> getProductsByParameters(
-      String name,
-      String description,
-      Integer stock,
-      BigDecimal price,
-      String batch,
+  public List<Purchase> getPurchasesByParameters(
+      Integer supplierId,
+      Integer userId,
+      LocalDate paymentDate,
       LocalDate expirationDate,
-      Integer supplierId) {
+      PurchaseState state,
+      BigDecimal totalCost) {
 
-    return productReadRepository.findAll(
-        ProductSpecifications.filterBy(
-            name, description, stock, price, batch, expirationDate, supplierId));
+    return purchaseReadRepository.findAll(
+        PurchaseSpecifications.filterBy(
+            supplierId, userId, paymentDate, expirationDate, state, totalCost));
+  }
+
+  public List<PurchaseProduct> getPurchaseProductsByParameters(
+      Integer purchaseId,
+      Integer productId,
+      Integer quantity,
+      BigDecimal unitPrice,
+      BigDecimal subtotal) {
+
+    return purchaseProductReadRepository.findAll(
+        PurchaseProductSpecifications.filterBy(
+            purchaseId, productId, quantity, unitPrice, subtotal));
+  }
+
+  public List<PurchaseProduct> getAllPurchaseProductByPurchaseId(Integer purchaseId) {
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
+    return purchaseProductReadRepository.findAll();
+  }
+
+  public List<PurchaseProduct> getAllPurchaseProductByProductId(Integer productId) {
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
+    return purchaseProductReadRepository.findAll();
+  }
+
+  public PurchaseProduct getPurchaseProductById(Integer id) {
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
+    return purchaseProductReadRepository
+        .findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("PurchaseProduct doesn't exist"));
   }
 }

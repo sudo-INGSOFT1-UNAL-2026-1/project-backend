@@ -1,5 +1,6 @@
 package com.unerp.domain.purchase;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.unerp.domain.purchase.state.PurchaseState;
@@ -12,7 +13,7 @@ public class PurchaseBuilder {
     private LocalDate paymentDate;
     private LocalDate deliveryDate;
     private PurchaseState state;
-    private Double totalCost;
+    private BigDecimal totalCost;
 
     public PurchaseBuilder setId(Integer id) {
         this.id = id;
@@ -44,7 +45,7 @@ public class PurchaseBuilder {
         return this;
     }
 
-    public PurchaseBuilder setTotalCost(Double totalCost) {
+    public PurchaseBuilder setTotalCost(BigDecimal totalCost) {
         this.totalCost = totalCost;
         return this;
     }
