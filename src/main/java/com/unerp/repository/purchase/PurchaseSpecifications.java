@@ -1,22 +1,17 @@
 package com.unerp.repository.purchase;
 
-import com.unerp.domain.purchaseProduct.PurchaseProduct;
-
+import com.unerp.domain.purchase.Purchase;
 import jakarta.persistence.criteria.Predicate;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.data.jpa.domain.Specification;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
 import com.unerp.domain.purchase.state.PurchaseState;
 
 public class PurchaseSpecifications {
 
-  public static Specification<PurchaseProduct> filterBy(
+  public static Specification<Purchase> filterBy(
       Integer supplierId,
       Integer userId,
       LocalDate paymentDate,
@@ -51,7 +46,7 @@ public class PurchaseSpecifications {
         predicates.add(cb.equal(root.get("totalCost"), totalCost));
       }
 
-      return cb.and(predicates.toArray(new Predicate[0]));
+      return cb.and(predicates.toArray(Predicate[]::new));
     };
   }
 }

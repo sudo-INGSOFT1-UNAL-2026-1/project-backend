@@ -2,15 +2,19 @@ package com.unerp.domain.purchase;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import com.unerp.domain.purchase.state.PurchaseState;
+import com.unerp.domain.purchaseProduct.PurchaseProduct;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
@@ -22,10 +26,10 @@ public class Purchase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @JoinColumn(name = "supplier_id")
+    @Column(name = "supplier_id")
     private Integer supplierId;
 
-    @JoinColumn(name = "user_id")
+    @Column(name = "user_id")
     private Integer userId;
 
     @Column(name = "payment_date")
@@ -38,7 +42,10 @@ public class Purchase {
 
     @Column(name = "status")
     private String stateString;
-    
+
+    @OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PurchaseProduct> purchaseProducts;
+
     @Column(name = "total_cost")
     private BigDecimal totalCost;
 
@@ -49,7 +56,8 @@ public class Purchase {
             LocalDate paymentDate,
             LocalDate deliveryDate,
             PurchaseState state,
-            BigDecimal totalCost
+            BigDecimal totalCost,
+            List<PurchaseProduct> purchaseProducts
     ) {
         this.id = id;
         this.supplierId = supplierId;
@@ -59,6 +67,7 @@ public class Purchase {
         this.state = state;
         this.stateString = state.getName();
         this.totalCost = totalCost;
+        this.purchaseProducts = purchaseProducts;
     }
 
     public Purchase() {
@@ -86,6 +95,10 @@ public class Purchase {
 
     public PurchaseState getState() {
         return state;
+    }
+
+    public List<PurchaseProduct> getPurchaseProducts() {
+        return purchaseProducts;
     }
 
     public void pay() {

@@ -6,12 +6,13 @@ import java.time.LocalDate;
 import org.springframework.stereotype.Service;
 
 import com.unerp.domain.permission.PermissionName;
-import com.unerp.domain.product.Product;
-import com.unerp.domain.product.ProductBuilder;
+import com.unerp.domain.purchase.Purchase;
+import com.unerp.domain.purchase.PurchaseBuilder;
+import com.unerp.domain.purchase.state.PurchaseState;
 import com.unerp.domain.purchaseProduct.PurchaseProduct;
 import com.unerp.domain.purchaseProduct.PurchaseProductBuilder;
-import com.unerp.repository.product.ProductReadRepository;
-import com.unerp.repository.product.ProductWriteRepository;
+import com.unerp.repository.purchase.PurchaseReadRepository;
+import com.unerp.repository.purchase.PurchaseWriteRepository;
 import com.unerp.repository.purchaseProduct.PurchaseProductReadRepository;
 import com.unerp.repository.purchaseProduct.PurchaseProductWriteRepository;
 import com.unerp.service.auth.AuthorizationService;
@@ -19,62 +20,59 @@ import com.unerp.service.auth.AuthorizationService;
 @Service
 public class PurchaseUpdateService {
 
-  private final ProductReadRepository productReadRepository;
-  private final ProductWriteRepository productWriteRepository;
+  private final PurchaseReadRepository purchaseReadRepository;
+  private final PurchaseWriteRepository purchaseWriteRepository;
   private final PurchaseProductReadRepository purchaseProductReadRepository;
   private final PurchaseProductWriteRepository purchaseProductWriteRepository;
   private final AuthorizationService authorizationService;
 
   public PurchaseUpdateService(
-      ProductReadRepository productReadRepository,
-      ProductWriteRepository productWriteRepository,
+      PurchaseReadRepository purchaseReadRepository,
+      PurchaseWriteRepository purchaseWriteRepository,
       PurchaseProductReadRepository purchaseProductReadRepository,
       PurchaseProductWriteRepository purchaseProductWriteRepository,
       AuthorizationService authorizationService) {
-    this.productReadRepository = productReadRepository;
-    this.productWriteRepository = productWriteRepository;
+    this.purchaseReadRepository = purchaseReadRepository;
+    this.purchaseWriteRepository = purchaseWriteRepository;
     this.purchaseProductReadRepository = purchaseProductReadRepository;
     this.purchaseProductWriteRepository = purchaseProductWriteRepository;
     this.authorizationService = authorizationService;
   }
 
-  public Product updateProduct(
+  public Purchase updatePurchase(
       Integer id,
-      String name,
-      String description,
-      Integer stock,
-      BigDecimal price,
-      String batch,
-      LocalDate expirationDate,
-      Integer supplierId) {
+      Integer supplierId,
+      Integer userId,
+      LocalDate paymentDate,
+      LocalDate deliveryDate,
+      PurchaseState state,
+      BigDecimal totalCost) {
 
     authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
-    Product existingProduct =
-        productReadRepository
+    Purchase existingPurchase =
+        purchaseReadRepository
             .findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Product doesn't exist"));
+            .orElseThrow(() -> new IllegalArgumentException("Purchase doesn't exist"));
 
-    String existingName = existingProduct.getName();
-    String existingDescription = existingProduct.getDescription();
-    Integer existingStock = existingProduct.getStock();
-    BigDecimal existingPrice = existingProduct.getPrice();
-    String existingBatch = existingProduct.getBatch();
-    LocalDate existingExpirationDate = existingProduct.getExpirationDate();
-    Integer existingSupplierId = existingProduct.getSupplierId();
+    Integer existingSupplierId = existingPurchase.getSupplierId();
+    Integer existingUserId = existingPurchase.getUserId();
+    LocalDate existingPaymentDate = existingPurchase.getPaymentDate();
+    LocalDate existingDeliveryDate = existingPurchase.getDeliveryDate();
+    PurchaseState existingState = existingPurchase.getState();
+    BigDecimal existingTotalCost = existingPurchase.getTotalCost();
 
-    Product updatedProduct =
-        new ProductBuilder()
+    Purchase updatedPurchase =
+        new PurchaseBuilder()
             .setId(id)
-            .setName(name != null ? name : existingName)
-            .setDescription(description != null ? description : existingDescription)
-            .setStock(stock != null ? stock : existingStock)
-            .setPrice(price != null ? price : existingPrice)
-            .setBatch(batch != null ? batch : existingBatch)
-            .setExpirationDate(expirationDate != null ? expirationDate : existingExpirationDate)
             .setSupplierId(supplierId != null ? supplierId : existingSupplierId)
+            .setUserId(existingUserId != null ? existingUserId : existingUserId) // Assuming userId is not being updated
+            .setPaymentDate(existingPaymentDate != null ? existingPaymentDate : existingPaymentDate) // Assuming paymentDate is not being updated
+            .setDeliveryDate(existingDeliveryDate != null ? existingDeliveryDate : existingDeliveryDate) // Assuming deliveryDate is not being updated
+            .setState(existingState != null ? existingState : existingState) // Assuming state is not being updated
+            .setTotalCost(existingTotalCost != null ? existingTotalCost : existingTotalCost)
             .build();
 
-    return productWriteRepository.save(updatedProduct);
+    return purchaseWriteRepository.save(updatedPurchase);
   }
 
   public PurchaseProduct updatePurchaseProduct(

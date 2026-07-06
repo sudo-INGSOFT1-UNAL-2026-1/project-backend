@@ -2,8 +2,10 @@ package com.unerp.domain.purchase;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import com.unerp.domain.purchase.state.PurchaseState;
+import com.unerp.domain.purchaseProduct.PurchaseProduct;
 
 public class PurchaseBuilder {
 
@@ -14,6 +16,7 @@ public class PurchaseBuilder {
     private LocalDate deliveryDate;
     private PurchaseState state;
     private BigDecimal totalCost;
+    private List<PurchaseProduct> purchaseProducts;
 
     public PurchaseBuilder setId(Integer id) {
         this.id = id;
@@ -51,6 +54,6 @@ public class PurchaseBuilder {
     }
 
     public Purchase build() {
-        return new Purchase(id, supplierId, userId, paymentDate, deliveryDate, state, totalCost);
+        return new Purchase(id, supplierId, userId, paymentDate, deliveryDate, state, totalCost, purchaseProducts);
     }
 }

@@ -58,11 +58,6 @@ public class PurchaseDeleteService {
     purchaseWriteRepository.deleteBySupplierId(supplierId);
   }
 
-  public void deletePurchaseProductsByPurchaseId(Integer id) {
-    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
-    purchaseProductWriteRepository.deleteByPurchaseId(id);
-  }
-
   public void deletePurchaseProductById(Integer id) {
     authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
     if (!productReadRepository.existsById(id)) {

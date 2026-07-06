@@ -1,5 +1,11 @@
 package com.unerp.service.product;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.unerp.domain.permission.PermissionName;
 import com.unerp.domain.product.Product;
 import com.unerp.domain.product.ProductBuilder;
@@ -7,10 +13,6 @@ import com.unerp.repository.product.ProductReadRepository;
 import com.unerp.repository.product.ProductSpecifications;
 import com.unerp.repository.product.ProductWriteRepository;
 import com.unerp.service.auth.AuthorizationService;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ProductGetService {
@@ -85,7 +87,7 @@ public class ProductGetService {
       String batch,
       LocalDate expirationDate,
       Integer supplierId) {
-
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
     return productReadRepository.findAll(
         ProductSpecifications.filterBy(
             name, description, stock, price, batch, expirationDate, supplierId));

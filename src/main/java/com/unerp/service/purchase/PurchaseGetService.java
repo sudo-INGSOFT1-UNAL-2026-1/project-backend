@@ -1,23 +1,22 @@
 package com.unerp.service.purchase;
 
-import com.unerp.domain.permission.PermissionName;
-import com.unerp.domain.purchaseProduct.PurchaseProduct;
-import com.unerp.repository.purchase.PurchaseSpecifications;
-import com.unerp.repository.purchase.PurchaseReadRepository;
-import com.unerp.repository.purchase.PurchaseWriteRepository;
-import com.unerp.repository.purchaseProduct.PurchaseProductReadRepository;
-import com.unerp.repository.purchaseProduct.PurchaseProductSpecifications;
-import com.unerp.service.auth.AuthorizationService;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.unerp.domain.permission.PermissionName;
 import com.unerp.domain.purchase.Purchase;
 import com.unerp.domain.purchase.PurchaseBuilder;
 import com.unerp.domain.purchase.state.PurchaseState;
+import com.unerp.domain.purchaseProduct.PurchaseProduct;
+import com.unerp.repository.purchase.PurchaseReadRepository;
+import com.unerp.repository.purchase.PurchaseSpecifications;
+import com.unerp.repository.purchase.PurchaseWriteRepository;
+import com.unerp.repository.purchaseProduct.PurchaseProductReadRepository;
+import com.unerp.repository.purchaseProduct.PurchaseProductSpecifications;
+import com.unerp.service.auth.AuthorizationService;
 
 @Service
 public class PurchaseGetService {
@@ -89,13 +88,18 @@ public class PurchaseGetService {
       Integer supplierId,
       Integer userId,
       LocalDate paymentDate,
-      LocalDate expirationDate,
+      LocalDate deliveryDate,
       PurchaseState state,
       BigDecimal totalCost) {
-
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
     return purchaseReadRepository.findAll(
         PurchaseSpecifications.filterBy(
-            supplierId, userId, paymentDate, expirationDate, state, totalCost));
+            supplierId, userId, paymentDate, deliveryDate, state, totalCost));
+  }
+
+  public List<PurchaseProduct> getAllPurchaseProducts() {
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
+    return purchaseProductReadRepository.findAll();
   }
 
   public List<PurchaseProduct> getPurchaseProductsByParameters(
@@ -104,7 +108,7 @@ public class PurchaseGetService {
       Integer quantity,
       BigDecimal unitPrice,
       BigDecimal subtotal) {
-
+    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
     return purchaseProductReadRepository.findAll(
         PurchaseProductSpecifications.filterBy(
             purchaseId, productId, quantity, unitPrice, subtotal));
@@ -112,12 +116,14 @@ public class PurchaseGetService {
 
   public List<PurchaseProduct> getAllPurchaseProductByPurchaseId(Integer purchaseId) {
     authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
-    return purchaseProductReadRepository.findAll();
+    return purchaseProductReadRepository.findAll(
+        PurchaseProductSpecifications.filterBy(purchaseId, null, null, null, null));
   }
 
   public List<PurchaseProduct> getAllPurchaseProductByProductId(Integer productId) {
     authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
-    return purchaseProductReadRepository.findAll();
+    return purchaseProductReadRepository.findAll(
+        PurchaseProductSpecifications.filterBy(null, productId, null, null, null));
   }
 
   public PurchaseProduct getPurchaseProductById(Integer id) {

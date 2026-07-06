@@ -1,11 +1,19 @@
 package com.unerp.controller.purchase;
 
-import com.unerp.domain.purchaseProduct.PurchaseProduct;
-import com.unerp.service.PurchaseService;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.unerp.domain.purchase.Purchase;
+import com.unerp.domain.purchaseProduct.PurchaseProduct;
+import com.unerp.service.PurchaseService;
 
 @RestController
 @RequestMapping("/compras")
@@ -18,6 +26,31 @@ public class PurchaseController {
     }
     
     @PostMapping("/crear")
+    public ResponseEntity<?> createPurchase(@RequestBody Purchase purchase) {
+        try {
+            Purchase created = purchaseService.createPurchase(purchase);
+            return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    
+    @GetMapping("/listar")
+    public ResponseEntity<List<Purchase>> getAllPurchases() {
+        return ResponseEntity.ok(purchaseService.getAllPurchases());
+    }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getPurchaseById(@PathVariable Integer id) {
+        try {
+            Purchase purchase = purchaseService.getPurchaseById(id);
+            return ResponseEntity.ok(purchase);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/productos/crear")
     public ResponseEntity<?> createPurchaseProduct(@RequestBody PurchaseProduct purchaseProduct) {
         try {
             PurchaseProduct created = purchaseService.createPurchaseProduct(purchaseProduct);
@@ -27,16 +60,16 @@ public class PurchaseController {
         }
     }
     
-    @GetMapping("/listar")
-    public ResponseEntity<List<Product>> getAllProducts() {
-        return ResponseEntity.ok(purchaseService.getAllProducts());
+    @GetMapping("/productos/listar")
+    public ResponseEntity<List<PurchaseProduct>> getAllPurchaseProducts() {
+        return ResponseEntity.ok(purchaseService.getAllPurchaseProducts());
     }
     
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getProductById(@PathVariable Integer id) {
+    @GetMapping("/productos/{id}")
+    public ResponseEntity<?> getPurchaseProductById(@PathVariable Integer id) {
         try {
-            Product product = purchaseService.getProductById(id);
-            return ResponseEntity.ok(product);
+            PurchaseProduct purchaseProduct = purchaseService.getPurchaseProductById(id);
+            return ResponseEntity.ok(purchaseProduct);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }
