@@ -42,7 +42,7 @@ public class SupplierGetController {
     }
   }
 
-  @GetMapping("/update/{id}")
+  @GetMapping("/{id}")
   public ResponseEntity<?> getSupplierById(@PathVariable Integer id) {
     try {
       Supplier supplier = supplierGetService.getSupplierById(id);
