@@ -23,7 +23,7 @@ public class CustomerUpdateController {
     this.customerUpdateService = customerUpdateService;
   }
 
-  @PutMapping("/{id}")
+  @PutMapping("edit/{id}")
   public ResponseEntity<?> updateCustomer(
       @PathVariable Integer id,
       @RequestBody CustomerUpdateRequest request) {
