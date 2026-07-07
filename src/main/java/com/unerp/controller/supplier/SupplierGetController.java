@@ -1,10 +1,11 @@
 package com.unerp.controller.supplier;
 
 import com.unerp.domain.supplier.Supplier;
+import com.unerp.dto.supplier.SupplierMapper;
+import com.unerp.dto.supplier.SupplierResponse;
 import com.unerp.service.supplier.SupplierGetService;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,11 +23,16 @@ public class SupplierGetController {
     this.supplierGetService = supplierGetService;
   }
 
-  @GetMapping
+  @GetMapping("/all")
   public ResponseEntity<?> getAllSuppliers() {
     try {
-      List<Map<String, Object>> responseBody =
-          supplierGetService.getAllSuppliers().stream().map(this::buildSupplierResponse).toList();
+
+      List<Supplier> suppliers = supplierGetService.getAllSuppliers();
+
+      List<SupplierResponse> responseBody = new ArrayList<>();
+      for (Supplier supplier : suppliers) {
+        responseBody.add(SupplierMapper.toResponse(supplier));
+      }
 
       return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     } catch (IllegalStateException e) {
@@ -36,12 +42,12 @@ public class SupplierGetController {
     }
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("/update/{id}")
   public ResponseEntity<?> getSupplierById(@PathVariable Integer id) {
     try {
       Supplier supplier = supplierGetService.getSupplierById(id);
 
-      return ResponseEntity.status(HttpStatus.OK).body(buildSupplierResponse(supplier));
+      return ResponseEntity.status(HttpStatus.OK).body(SupplierMapper.toResponse(supplier));
     } catch (IllegalArgumentException e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     } catch (IllegalStateException e) {
@@ -49,15 +55,5 @@ public class SupplierGetController {
     } catch (SecurityException e) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
-  }
-
-  private Map<String, Object> buildSupplierResponse(Supplier supplier) {
-    Map<String, Object> responseBody = new HashMap<>();
-    responseBody.put("id", supplier.getId());
-    responseBody.put("name", supplier.getName());
-    responseBody.put("phone", supplier.getPhone());
-    responseBody.put("email", supplier.getEmail());
-
-    return responseBody;
   }
 }

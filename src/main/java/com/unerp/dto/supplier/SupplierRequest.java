@@ -3,7 +3,7 @@ package com.unerp.dto.supplier;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public record SupplierCreateRequest (
+public record SupplierRequest(
 
     @NotBlank(message = "El nombre del proveedor es obligatorio")
     String name,

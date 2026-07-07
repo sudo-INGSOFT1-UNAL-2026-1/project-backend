@@ -25,6 +25,7 @@ public class SupplierDeleteController {
       supplierDeleteService.deleteSupplier(id);
 
       return ResponseEntity.status(HttpStatus.OK).body("Supplier deleted successfully");
+
     } catch (IllegalArgumentException e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     } catch (DataIntegrityViolationException e) {

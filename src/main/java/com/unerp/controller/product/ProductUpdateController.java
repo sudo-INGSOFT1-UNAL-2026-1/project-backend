@@ -25,14 +25,14 @@ public class ProductUpdateController {
 
   @PutMapping("/update/{productId}")
   public ResponseEntity<?> updateProduct(
-      @PathVariable Integer id,
+      @PathVariable Integer productId,
       @RequestBody ProductSearchRequest request
   ) {
     try {
 
       Product product =
           productUpdateService.updateProduct(
-              id,
+              productId,
               request.name(),
               request.description(),
               request.stock(),
