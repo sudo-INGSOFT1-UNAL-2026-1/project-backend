@@ -3,7 +3,6 @@ package com.unerp.dto.purchase;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.unerp.domain.purchase.state.PurchaseState;
 import com.unerp.domain.purchaseProduct.PurchaseProduct;
 
 import java.math.BigDecimal;
@@ -14,7 +13,7 @@ public record PurchaseResponse(
     Integer userId,
     LocalDate paymentDate,
     LocalDate deliveryDate,
-    PurchaseState state,
+    String state,
     BigDecimal totalCost,
     List<PurchaseProduct> purchaseProducts
 ) {

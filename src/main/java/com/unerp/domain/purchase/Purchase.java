@@ -13,10 +13,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import jakarta.persistence.PostLoad;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 
 @Entity
 @Table(name = "purchase")
@@ -124,4 +126,17 @@ public class Purchase {
     public BigDecimal getTotalCost() {
         return totalCost;
     }
+
+  @PostLoad
+  private void loadState() {
+    this.state = PurchaseState.fromName(this.stateString);
+  }
+
+  @PrePersist
+  @PreUpdate
+  private void saveState() {
+    if (this.state != null) {
+      this.stateString = this.state.getName();
+    }
+  }
 }

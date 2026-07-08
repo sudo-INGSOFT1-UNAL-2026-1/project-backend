@@ -1,17 +1,21 @@
 package com.unerp.dto.purchase;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 
 import jakarta.validation.constraints.NotBlank;
 
 public record PurchaseProductRequest(
 
-    @NotBlank
+    @NotNull
     Integer productId,
 
-    @NotBlank
+    @NotNull
+    @PositiveOrZero
     Integer quantity,
     
-    @NotBlank
+    @NotNull
+    @PositiveOrZero
     BigDecimal unitPrice) {
 }

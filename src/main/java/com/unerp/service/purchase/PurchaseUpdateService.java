@@ -45,7 +45,7 @@ public class PurchaseUpdateService {
       Integer userId,
       LocalDate paymentDate,
       LocalDate deliveryDate,
-      PurchaseState state,
+      String state,
       BigDecimal totalCost) {
 
     authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
@@ -61,15 +61,17 @@ public class PurchaseUpdateService {
     PurchaseState existingState = existingPurchase.getState();
     BigDecimal existingTotalCost = existingPurchase.getTotalCost();
 
+    PurchaseState newState = state != null ? PurchaseState.fromName(state) : existingState;
+
     Purchase updatedPurchase =
         new PurchaseBuilder()
             .setId(id)
             .setSupplierId(supplierId != null ? supplierId : existingSupplierId)
-            .setUserId(existingUserId != null ? existingUserId : existingUserId) // Assuming userId is not being updated
-            .setPaymentDate(existingPaymentDate != null ? existingPaymentDate : existingPaymentDate) // Assuming paymentDate is not being updated
-            .setDeliveryDate(existingDeliveryDate != null ? existingDeliveryDate : existingDeliveryDate) // Assuming deliveryDate is not being updated
-            .setState(existingState != null ? existingState : existingState) // Assuming state is not being updated
-            .setTotalCost(existingTotalCost != null ? existingTotalCost : existingTotalCost)
+            .setUserId(userId != null ? userId : existingUserId)
+            .setPaymentDate(paymentDate != null ? paymentDate : existingPaymentDate)
+            .setDeliveryDate(deliveryDate != null ? deliveryDate : existingDeliveryDate)
+            .setState(newState)
+            .setTotalCost(totalCost != null ? totalCost : existingTotalCost)
             .build();
 
     return purchaseWriteRepository.save(updatedPurchase);

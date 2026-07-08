@@ -43,7 +43,7 @@ public class PurchaseGetService {
       Integer userId,
       LocalDate paymentDate,
       LocalDate deliveryDate,
-      PurchaseState state,
+      String state,
       BigDecimal totalCost) {
 
     authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
@@ -57,6 +57,8 @@ public class PurchaseGetService {
     PurchaseState existingState = existingPurchase.getState();
     BigDecimal existingTotalCost = existingPurchase.getTotalCost();
 
+    PurchaseState newState = state != null ? PurchaseState.fromName(state) : existingState;
+
     Purchase updatedPurchase =
         new PurchaseBuilder()
             .setId(id)
@@ -64,9 +66,8 @@ public class PurchaseGetService {
             .setUserId(userId != null ? userId : existingUserId)
             .setPaymentDate(paymentDate != null ? paymentDate : existingPaymentDate)
             .setDeliveryDate(deliveryDate != null ? deliveryDate : existingDeliveryDate)
-            .setState(state != null ? state : existingState)
+            .setState(newState)
             .setTotalCost(totalCost != null ? totalCost : existingTotalCost)
-            .setSupplierId(supplierId != null ? supplierId : existingSupplierId)
             .build();
 
     return purchaseWriteRepository.save(updatedPurchase);
@@ -89,12 +90,13 @@ public class PurchaseGetService {
       Integer userId,
       LocalDate paymentDate,
       LocalDate deliveryDate,
-      PurchaseState state,
+      String state,
       BigDecimal totalCost) {
     authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
+    PurchaseState purchaseState = state != null ? PurchaseState.fromName(state) : null;
     return purchaseReadRepository.findAll(
         PurchaseSpecifications.filterBy(
-            supplierId, userId, paymentDate, deliveryDate, state, totalCost));
+            supplierId, userId, paymentDate, deliveryDate, purchaseState, totalCost));
   }
 
   public List<PurchaseProduct> getAllPurchaseProducts() {

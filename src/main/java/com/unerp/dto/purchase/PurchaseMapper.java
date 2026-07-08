@@ -13,7 +13,7 @@ public final class PurchaseMapper {
         purchase.getUserId(),
         purchase.getPaymentDate(),
         purchase.getDeliveryDate(),
-        purchase.getState(),
+        purchase.getState().getName(),
         purchase.getTotalCost(),
         purchase.getPurchaseProducts()
     );

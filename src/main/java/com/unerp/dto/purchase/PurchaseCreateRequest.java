@@ -1,34 +1,39 @@
 package com.unerp.dto.purchase;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.unerp.domain.purchase.state.PurchaseState;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 
 public record PurchaseCreateRequest(
 
-    @NotBlank
+    @NotNull
+    @Positive
     Integer supplierId,
 
-    @NotBlank
+    @NotNull
+    @Positive
     Integer userId,
 
-    @NotBlank
+    @NotNull
     LocalDate paymentDate,
 
-    @NotBlank
+    @NotNull
     LocalDate deliveryDate,
 
-    @NotBlank
-    PurchaseState state,
-
-    @NotBlank
+    @NotNull
+    @Positive
     BigDecimal totalCost,
 
-    @NotBlank
-    List<@Valid PurchaseProductRequest> products) {
+    @NotEmpty
+    List<@Valid PurchaseProductRequest> products
+
+) {
 }

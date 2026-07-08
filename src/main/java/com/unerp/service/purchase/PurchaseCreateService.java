@@ -83,7 +83,7 @@ public class PurchaseCreateService {
       Integer quantity,
       BigDecimal unitPrice) {
 
-    authorizationService.validatePermission(PermissionName.GESTION_INVENTARIO);
+    authorizationService.validatePermission(PermissionName.GESTION_COMPRAS);
     validateProductExists(productId);
     validatePurchaseExists(purchaseId);
     validateUniquePurchaseProduct(purchaseId, productId);
