@@ -54,28 +54,18 @@ public class PurchaseUpdateService {
             .findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Purchase doesn't exist"));
 
-    Integer existingSupplierId = existingPurchase.getSupplierId();
-    Integer existingUserId = existingPurchase.getUserId();
-    LocalDate existingPaymentDate = existingPurchase.getPaymentDate();
-    LocalDate existingDeliveryDate = existingPurchase.getDeliveryDate();
-    PurchaseState existingState = existingPurchase.getState();
-    BigDecimal existingTotalCost = existingPurchase.getTotalCost();
+    if (supplierId != null) existingPurchase.setSupplierId(supplierId);
+    if (userId != null) existingPurchase.setUserId(userId);
+    if (paymentDate != null) existingPurchase.setPaymentDate(paymentDate);
+    if (deliveryDate != null) existingPurchase.setDeliveryDate(deliveryDate);
+    if (totalCost != null) existingPurchase.setTotalCost(totalCost);
 
-    PurchaseState newState = state != null ? PurchaseState.fromName(state) : existingState;
+    if (state != null) {
+      PurchaseState newState = PurchaseState.fromName(state);
+      existingPurchase.setState(newState);
+    }
 
-    Purchase updatedPurchase =
-        new PurchaseBuilder()
-            .setId(id)
-            .setSupplierId(supplierId != null ? supplierId : existingSupplierId)
-            .setUserId(userId != null ? userId : existingUserId)
-            .setPaymentDate(paymentDate != null ? paymentDate : existingPaymentDate)
-            .setDeliveryDate(deliveryDate != null ? deliveryDate : existingDeliveryDate)
-            .setState(newState)
-            .setTotalCost(totalCost != null ? totalCost : existingTotalCost)
-            .setPurchaseProducts(existingPurchase.getPurchaseProducts())
-            .build();
-
-    return purchaseWriteRepository.save(updatedPurchase);
+    return purchaseWriteRepository.save(existingPurchase);
   }
 
   public PurchaseProduct updatePurchaseProduct(

@@ -79,28 +79,57 @@ public class Purchase {
         return id;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public Integer getSupplierId() {
         return supplierId;
+    }
+
+    public void setSupplierId(Integer supplierId) {
+        this.supplierId = supplierId;
     }
 
     public Integer getUserId() {
         return userId;
     }
 
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
     public LocalDate getPaymentDate() {
         return paymentDate;
+    }
+
+    public void setPaymentDate(LocalDate paymentDate) {
+        this.paymentDate = paymentDate;
     }
 
     public LocalDate getDeliveryDate() {
         return deliveryDate;
     }
 
+    public void setDeliveryDate(LocalDate deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
+
     public PurchaseState getState() {
         return state;
     }
 
+    public void setState(PurchaseState state) {
+        this.state = state;
+        this.stateString = state != null && state.getName() != null ? state.getName().toLowerCase() : null;
+    }
+
     public List<PurchaseProduct> getPurchaseProducts() {
         return purchaseProducts;
+    }
+
+    public void setPurchaseProducts(List<PurchaseProduct> purchaseProducts) {
+        this.purchaseProducts = purchaseProducts;
     }
 
     public void pay() {
@@ -125,6 +154,10 @@ public class Purchase {
 
     public BigDecimal getTotalCost() {
         return totalCost;
+    }
+
+    public void setTotalCost(BigDecimal totalCost) {
+        this.totalCost = totalCost;
     }
 
   @PostLoad

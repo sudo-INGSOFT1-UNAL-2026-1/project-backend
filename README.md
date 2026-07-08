@@ -1,154 +1,262 @@
-# Endpoints Backend UNERP
+# UNERP Backend
 
-## Crear usuario
+<p align="center">
 
-### Endpoint
+![Java](https://img.shields.io/badge/Java-21-red?style=for-the-badge)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=for-the-badge)
+![MySQL](https://img.shields.io/badge/MySQL-8-4479A1?style=for-the-badge)
+![Maven](https://img.shields.io/badge/Maven-3.9-C71A36?style=for-the-badge)
 
-```http
-POST /user/create
+</p>
+
+Backend del sistema **UNERP**, desarrollado para la asignatura **Ingeniería de Software I** de la **Universidad Nacional de Colombia**.
+
+UNERP es un sistema ERP modular orientado a pequeñas y medianas empresas, diseñado para administrar usuarios, clientes, proveedores, inventario, compras y ventas mediante una API REST desarrollada con Spring Boot.
+
+---
+
+# Características
+
+- Arquitectura por capas.
+- API REST.
+- Persistencia con MySQL.
+- Autenticación mediante JWT.
+- Validaciones con Jakarta Validation.
+- Patrón State para el manejo de estados.
+- DTOs para la comunicación entre cliente y servidor.
+- Mappers para la transformación de entidades.
+- Docker para el entorno de base de datos.
+- Maven Wrapper incluido.
+- Validación de calidad de código mediante:
+    - Checkstyle
+    - PMD
+    - Spotless
+
+---
+
+# Tecnologías
+
+| Tecnología | Versión |
+|------------|----------|
+| Java | 21 |
+| Spring Boot | 3.x |
+| Spring Security | 6.x |
+| Spring Data JPA | 3.x |
+| Maven | 3.x |
+| MySQL | 8 |
+| Docker | Latest |
+| JWT | JJWT |
+| Jakarta Validation | Included |
+
+---
+
+# Arquitectura
+
+El proyecto sigue una arquitectura por capas para mantener una clara separación de responsabilidades.
+
+```
+Controller
+      │
+      ▼
+Service
+      │
+      ▼
+Repository
+      │
+      ▼
+Database
 ```
 
-### Tipo de Body
+Cada módulo organiza su lógica en:
 
-```text
-x-www-form-urlencoded
+- Controller
+- Service
+- Repository
+- Domain
+- DTO
+
+---
+
+# Estructura del proyecto
+
 ```
-
-### Parámetros
-
-| Parameter | Type |
-|---|---|
-| name | String |
-| email | String |
-| password | String |
-| roleName | String |
-
-### Roles disponibles
-
-- ADMIN_EMPRESA
-- EMPLEADO_VENTAS
-- EMPLEADO_COMPRAS
-- EMPLEADO_INVENTARIO
-- EMPLEADO_VENTAS_COMPRAS
-- EMPLEADO_VENTAS_INVENTARIO
-- EMPLEADO_COMPRAS_INVENTARIO
-- EMPLEADO_TOTAL
-
-## Nota
-
-Si es el primer usuario del sistema, automáticamente se creará como:
-
-```text
-ADMIN_EMPRESA
-```
-
-### Ejemplo
-
-```text
-name=user
-email=user@gmail.com
-password=123456
-roleName=EMPLEADO_TOTAL
+src
+└── main
+    ├── java
+    │   └── com.unerp
+    │       ├── controller
+    │       ├── domain
+    │       ├── dto
+    │       ├── repository
+    │       ├── security
+    │       ├── service
+    │       └── UnerpApplication
+    │
+    └── resources
+        └── application.yml
 ```
 
 ---
 
-## Login
+# Módulos implementados
 
-### Endpoint
+- Autenticación
+- Gestión de Usuarios
+- Gestión de Roles
+- Clientes
+- Proveedores
+- Productos
+- Compras
+- Ventas
 
-```http
+---
+
+# Patrones de diseño
+
+Durante el desarrollo del proyecto se utilizaron los siguientes patrones:
+
+- State
+- Repository
+- DTO
+- Mapper
+
+---
+
+# Instalación
+
+## Clonar el repositorio
+
+```bash
+git clone <URL_DEL_REPOSITORIO>
+```
+
+Ingresar al proyecto:
+
+```bash
+cd backend
+```
+
+---
+
+# Scripts de configuración
+
+El proyecto incluye scripts para facilitar la configuración inicial del entorno.
+
+- `setup.bat` — Windows.
+- `setup.sh` — Linux y macOS.
+
+> La funcionalidad de estos scripts será documentada una vez finalice su implementación.
+
+---
+
+# Base de datos
+
+La aplicación utiliza **MySQL**.
+
+Los scripts de inicialización de la base de datos se encuentran en:
+
+```
+data/
+├── init.sql
+└── seed.sql
+```
+
+---
+
+# Ejecución
+
+Una vez configurado el entorno, ejecutar la aplicación mediante Maven Wrapper.
+
+### Windows
+
+```bash
+mvnw.cmd spring-boot:run
+```
+
+### Linux / macOS
+
+```bash
+./mvnw spring-boot:run
+```
+
+
+# API REST
+
+Una vez iniciada la aplicación, la API estará disponible en:
+
+```
+http://localhost:8080
+```
+
+Algunos endpoints disponibles:
+
+```
 POST /auth/login
 ```
 
-### Tipo de Body
-
-```text
-x-www-form-urlencoded
+```
+GET /user/all
 ```
 
-### Parámetros
+```
+POST /user/create
+```
 
-| Parameter | Type |
-|---|---|
-| email | String |
-| password | String |
+```
+GET /product/all
+```
 
-### Ejemplo
+```
+POST /product/create
+```
 
-```text
-email=angel@gmail.com
-password=123456
+```
+GET /supplier/all
+```
+
+```
+POST /purchase/create
+```
+
+```
+GET /purchase/all
 ```
 
 ---
 
-# Estructura
+# Autenticación
 
-```text
-src
-└── main
-    └── java
-        └── com
-            └── unerp
+La autenticación se realiza mediante **JWT**.
 
-                ├── controller
-                │
-                │   ├── auth
-                │   │   └── AuthLoginController.java
-                │   │
-                │   ├── user
-                │   │   └── UserCreateController.java
-                │   │
-                │   ├── sales
-                │   ├── purchases
-                │   └── inventory
+Después de iniciar sesión se genera un token que deberá enviarse en las peticiones protegidas utilizando el encabezado:
 
-
-                ├── service
-                │
-                │   ├── auth
-                │   │   └── AuthLoginService.java
-                │   │
-                │   ├── user
-                │   │   └── UserCreateService.java
-                │   │
-                │   ├── sales
-                │   ├── purchases
-                │   └── inventory
-
-
-                ├── repository
-                │
-                │   ├── user
-                │   │   ├── UserCreateRepository.java
-                │   │   └── UserReadRepository.java
-                │   │
-                │   ├── role
-                │   │   └── RoleReadRepository.java
-                │   │
-                │   ├── sales
-                │   ├── purchases
-                │   └── inventory
-
-
-                ├── domain
-                │
-                │   ├── user
-                │   │   ├── User.java
-                │   │   ├── UserBuilder.java
-                │   │   │
-                │   │   └── state
-                │   │       ├── UserState.java
-                │   │       ├── ActiveState.java
-                │   │       └── InactiveState.java
-                │   │
-                │   └── role
-                │       ├── Role.java
-                │       └── RoleName.java
-
-
-                └── security
-                    ├── PasswordHasher.java
-                    └── SecurityConfig.java
 ```
+Authorization: Bearer <token>
+```
+
+---
+
+# Principios de desarrollo
+
+Durante el desarrollo del proyecto se siguieron buenas prácticas de ingeniería de software:
+
+- Clean Code.
+- Principios SOLID.
+- Separación de responsabilidades.
+- Arquitectura modular.
+- Uso de DTOs para desacoplar la capa de presentación del dominio.
+- Validaciones de entrada mediante Jakarta Validation.
+
+---
+
+# Equipo de desarrollo
+
+Proyecto desarrollado para la asignatura:
+
+**Ingeniería de Software I**
+
+**Universidad Nacional de Colombia**
+
+Grupo de trabajo:
+
+**sudo**
