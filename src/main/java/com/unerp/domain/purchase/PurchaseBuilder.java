@@ -53,6 +53,11 @@ public class PurchaseBuilder {
         return this;
     }
 
+    public PurchaseBuilder setPurchaseProducts(List<PurchaseProduct> purchaseProducts) {
+        this.purchaseProducts = purchaseProducts;
+        return this;
+    }
+
     public Purchase build() {
         return new Purchase(id, supplierId, userId, paymentDate, deliveryDate, state, totalCost, purchaseProducts);
     }

@@ -72,6 +72,7 @@ public class PurchaseUpdateService {
             .setDeliveryDate(deliveryDate != null ? deliveryDate : existingDeliveryDate)
             .setState(newState)
             .setTotalCost(totalCost != null ? totalCost : existingTotalCost)
+            .setPurchaseProducts(existingPurchase.getPurchaseProducts())
             .build();
 
     return purchaseWriteRepository.save(updatedPurchase);

@@ -67,7 +67,7 @@ public class Purchase {
         this.paymentDate = paymentDate;
         this.deliveryDate = deliveryDate;
         this.state = state;
-        this.stateString = state.getName();
+        this.stateString = state.getName() != null ? state.getName().toLowerCase() : null;
         this.totalCost = totalCost;
         this.purchaseProducts = purchaseProducts;
     }
@@ -136,7 +136,7 @@ public class Purchase {
   @PreUpdate
   private void saveState() {
     if (this.state != null) {
-      this.stateString = this.state.getName();
+      this.stateString = this.state.getName() != null ? this.state.getName().toLowerCase() : null;
     }
   }
 }
