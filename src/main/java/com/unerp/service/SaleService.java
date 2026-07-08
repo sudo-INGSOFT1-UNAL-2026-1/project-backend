@@ -6,12 +6,10 @@ import com.unerp.domain.sale.Sale;
 import com.unerp.domain.sale.SaleProduct;
 import com.unerp.domain.sale.SaleStatus;
 import com.unerp.repository.sale.SaleRepository;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Service
 public class SaleService {
     
     private final SaleRepository saleRepository;

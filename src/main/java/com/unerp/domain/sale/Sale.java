@@ -27,7 +27,7 @@ public class Sale {
     @Column(name = "delivery_date")
     private LocalDate deliveryDate;
     
-    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private SaleStatus status;
     
     @Column(name = "total_cost")

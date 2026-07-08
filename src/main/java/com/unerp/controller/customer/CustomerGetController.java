@@ -22,7 +22,7 @@ public class CustomerGetController {
     this.customerGetService = customerGetService;
   }
 
-  @GetMapping
+  @GetMapping("/all")
   public ResponseEntity<?> getAllCustomers() {
     try {
       List<Map<String, Object>> responseBody =

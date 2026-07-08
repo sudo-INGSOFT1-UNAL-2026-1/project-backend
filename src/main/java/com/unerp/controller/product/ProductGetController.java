@@ -59,10 +59,10 @@ public class ProductGetController {
   }
 
   @GetMapping("/{productId}")
-  public ResponseEntity<?> getProductById(@PathVariable Integer id) {
+  public ResponseEntity<?> getProductById(@PathVariable Integer productId) {
     try {
 
-      Product product = productGetService.getProductById(id);
+      Product product = productGetService.getProductById(productId);
 
       return ResponseEntity.status(HttpStatus.OK).body(ProductMapper.toResponse(product));
 

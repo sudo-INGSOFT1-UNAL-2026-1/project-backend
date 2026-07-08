@@ -1,7 +1,7 @@
 package com.unerp.controller.supplier;
 
 import com.unerp.domain.supplier.Supplier;
-import com.unerp.dto.supplier.SupplierCreateRequest;
+import com.unerp.dto.supplier.SupplierRequest;
 import com.unerp.dto.supplier.SupplierMapper;
 import com.unerp.service.supplier.SupplierCreateService;
 import jakarta.validation.Valid;
@@ -24,7 +24,7 @@ public class SupplierCreateController {
 
   @PostMapping("/create")
   public ResponseEntity<?> createSupplier(
-      @Valid @RequestBody SupplierCreateRequest request){
+      @Valid @RequestBody SupplierRequest request){
     try {
 
       Supplier supplier = supplierCreateService.createSupplier(

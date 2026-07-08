@@ -1,10 +1,13 @@
 package com.unerp.controller.user;
 
+import com.unerp.dto.user.ChangeUserRoleRequest;
+import jakarta.validation.Valid;
 import java.util.NoSuchElementException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,10 +28,10 @@ public class UserChangeRoleController {
 
   @PutMapping("/change-role")
   public ResponseEntity<?> changeUserRole(
-      @RequestParam Integer userId, @RequestParam String newRoleName) {
+      @Valid @RequestBody ChangeUserRoleRequest request) {
 
     try {
-      User user = userChangeRoleService.changeRole(userId, newRoleName);
+      User user = userChangeRoleService.changeRole(request.userId(), request.newRoleName());
 
       return ResponseEntity.status(HttpStatus.OK).body(UserMapper.toResponse(user));
     } catch (NoSuchElementException e) {
