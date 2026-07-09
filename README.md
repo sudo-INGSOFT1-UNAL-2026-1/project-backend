@@ -3,7 +3,7 @@
 <p align="center">
 
 ![Java](https://img.shields.io/badge/Java-21-red?style=for-the-badge)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=for-the-badge)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.6-6DB33F?style=for-the-badge)
 ![MySQL](https://img.shields.io/badge/MySQL-8-4479A1?style=for-the-badge)
 ![Maven](https://img.shields.io/badge/Maven-3.9-C71A36?style=for-the-badge)
 
@@ -36,17 +36,17 @@ UNERP es un sistema ERP modular orientado a pequeñas y medianas empresas, dise�
 
 # Tecnologías
 
-| Tecnología | Versión |
-|------------|----------|
-| Java | 21 |
-| Spring Boot | 3.x |
-| Spring Security | 6.x |
-| Spring Data JPA | 3.x |
-| Maven | 3.x |
-| MySQL | 8 |
-| Docker | Latest |
-| JWT | JJWT |
-| Jakarta Validation | Included |
+| Tecnología | Versión                      |
+|------------|------------------------------|
+| Java | 25                           |
+| Spring Boot | 4.0.6                        |
+| Spring Security | managed by Spring Boot 4.0.6 |
+| Spring Data JPA | managed by Spring Boot 4.0.6 |
+| Maven | 3.9                          |
+| MySQL | 8                            |
+| Docker | Latest                       |
+| JWT | JJWT 0.12.7                  |
+| Jakarta Validation | Included                     |
 
 ---
 
