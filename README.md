@@ -2,7 +2,7 @@
 
 <p align="center">
 
-![Java](https://img.shields.io/badge/Java-21-red?style=for-the-badge)
+![Java](https://img.shields.io/badge/Java-25-red?style=for-the-badge)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.6-6DB33F?style=for-the-badge)
 ![MySQL](https://img.shields.io/badge/MySQL-8-4479A1?style=for-the-badge)
 ![Maven](https://img.shields.io/badge/Maven-3.9-C71A36?style=for-the-badge)
